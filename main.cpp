@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 #include "Field.hpp"
 
 #define log(x) std::cout << x
@@ -6,40 +7,49 @@
 
 using std::string;
 
-int main()
+void getInitialSetup(Field fields[], int size, int startNum, int startLetter)
 {
-    const int SIZE_X = 8;
-    const int SIZE_Y = 8;
-    const int SIZE = SIZE_X * SIZE_Y;
-    const int START_LETTER = 65; // A
-    const int START_NUMBER = 1;
-
-    int xIndex = START_LETTER;
-    int yIndex = START_NUMBER;
+    int xIndex = startLetter;
+    int yIndex = startNum;
     int fieldIndex = 0;
 
-    Field fields[SIZE];
-
-    loop(SIZE_Y)
+    loop(size)
     {
-        loop(SIZE_X)
+        loop(size)
         {
             fields[fieldIndex].setField(xIndex, yIndex, fieldIndex);
 
             xIndex++;
             fieldIndex++;
         }
-        xIndex = START_LETTER;
+        xIndex = startLetter;
         yIndex++;
     }
+}
 
-    for (Field field : fields)
+void printBoard(Field board[], unsigned short int boardSize)
+{
+    for (size_t i = 0; i < boardSize; i++)
     {
-        std::string data = field.getField();
+        std::string data = board[i].getField();
         log(data);
-        if ((int)data[0] == START_LETTER + SIZE_X - 1)
+        if (!((i + 1) % (int)sqrt(boardSize)))
         {
             log('\n');
         }
-    };
+    }
+}
+
+int main()
+{
+    const unsigned short int SIZE = 8;
+    const unsigned short int FIELD_COUNT = pow(8, 2);
+    const unsigned short int START_LETTER = 65; // A
+    const unsigned short int START_NUMBER = 1;
+
+    Field fields[FIELD_COUNT];
+
+    getInitialSetup(fields, SIZE, START_NUMBER, START_LETTER);
+
+    printBoard(fields, FIELD_COUNT);
 }
