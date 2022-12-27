@@ -24,7 +24,7 @@ int main()
     {
         loop(SIZE_X)
         {
-            fields[fieldIndex].setField(xIndex, yIndex);
+            fields[fieldIndex].setField(xIndex, yIndex, fieldIndex);
 
             xIndex++;
             fieldIndex++;
@@ -43,5 +43,3 @@ int main()
         }
     };
 }
-
-// 10:02:37
