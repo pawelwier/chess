@@ -6,13 +6,23 @@ private:
     Player currentPlayer;
 
 public:
+    Game()
+    {
+        currentPlayer = white;
+    }
+
+    void setPlayer(Player newPlayer)
+    {
+        currentPlayer = newPlayer;
+    }
+
     Player getCurrentPlayer()
     {
         return currentPlayer;
     }
 
-    Game()
+    void nextPlayer()
     {
-        currentPlayer = white;
+        currentPlayer == white ? setPlayer(black) : setPlayer(white);
     }
 };

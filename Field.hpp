@@ -64,12 +64,12 @@ private:
     Piece piece;
     Player player;
 
+public:
     std::string getField()
     {
         return getChar(x) + std::to_string(y);
     }
 
-public:
     void setField(
         unsigned short int xValue,
         unsigned short int yValue,
@@ -109,3 +109,16 @@ public:
         player = currentPlayer;
     }
 };
+
+unsigned short int getFieldIndexByPosition(Field fields[], unsigned short int size, std::string position)
+{
+    int index;
+    for (size_t i = 0; i < size; i++)
+    {
+        if (fields[i].getField() == position)
+        {
+            index = i;
+        }
+    }
+    return index;
+}

@@ -39,13 +39,14 @@ void printBoard(Field board[], unsigned short int boardSize)
     }
 }
 
-void move(Game game, Field fields[], Field start, Field destination)
+void move(Game game, Field fields[], unsigned short int start, unsigned short int destination)
 {
-    Piece startPiece = start.getPiece();
+    Field startField = fields[start];
+    Piece startPiece = startField.getPiece();
     Player player = game.getCurrentPlayer();
 
-    unsigned short int startId = start.getId();
-    unsigned short int destinationId = destination.getId();
+    unsigned short int startId = startField.getId();
+    unsigned short int destinationId = fields[destination].getId();
 
     fields[startId].setPiece(none);
     fields[startId].setPlayer(empty);
@@ -61,6 +62,9 @@ int main()
     const unsigned short int START_LETTER = 65; // A
     const unsigned short int START_NUMBER = 1;
 
+    bool gameOn = true;
+    int moveCount = 1;
+
     Game game;
     Field fields[FIELD_COUNT];
 
@@ -70,7 +74,38 @@ int main()
 
     log(" \n");
 
-    move(game, fields, fields[12], fields[28]); // move pawn E2 -> E4
+    while (gameOn) // TODO: refactor
+    {
+        std::string player = game.getCurrentPlayer() == 1 ? "White" : "Black";
 
-    printBoard(fields, FIELD_COUNT);
+        log("Move: ");
+        log(moveCount);
+
+        log("\n");
+
+        log(player);
+        log("\'s turn. ");
+
+        std::string from, to;
+
+        log("Select piece: ");
+        std::cin >> from;
+
+        log("Move to: ");
+        std::cin >> to;
+
+        log("\n");
+
+        unsigned short int fromIndex = getFieldIndexByPosition(fields, FIELD_COUNT, from);
+        unsigned short int toIndex = getFieldIndexByPosition(fields, FIELD_COUNT, to);
+
+        move(game, fields, fromIndex, toIndex);
+
+        printBoard(fields, FIELD_COUNT);
+
+        log("\n\n");
+
+        game.nextPlayer();
+        moveCount++;
+    }
 }
