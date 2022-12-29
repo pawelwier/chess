@@ -27,3 +27,8 @@ std::map<Piece, std::string> pieces{
     {bishop, "bishop"},
     {queen, "queen"},
     {king, "king"}};
+
+std::map<Player, std::string> players{
+    {empty, "-"},
+    {white, "(W)"},
+    {black, "(B)"}};

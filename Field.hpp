@@ -1,4 +1,6 @@
 #include <string>
+#include <iostream>
+#include <iomanip>
 
 #include "utils.hpp"
 #include "boardData.hpp"
@@ -10,7 +12,7 @@ bool isInTypeArray(unsigned short int ids[], size_t s, unsigned short int id)
     return std::find(ids, end, id) != end;
 }
 
-Piece getPieceType(unsigned short int id) // refactor
+Piece initPieceType(unsigned short int id) // refactor
 {
     for (size_t i = 0; i < 2; i++)
     {
@@ -33,13 +35,23 @@ Piece getPieceType(unsigned short int id) // refactor
     return none;
 }
 
-Player getPiecePlayer(short unsigned id)
+Player initPiecePlayer(short unsigned id)
 {
     return isWithinValues(id, whitePieces)
                ? white
            : isWithinValues(id, blackPieces)
                ? black
                : empty;
+}
+
+std::string getPieceName(Piece piece)
+{
+    return pieces[piece];
+}
+
+std::string getPiecePlayer(Player player)
+{
+    return players[player];
 }
 
 class Field
@@ -52,6 +64,11 @@ private:
     Piece piece;
     Player player;
 
+    std::string getField()
+    {
+        return getChar(x) + std::to_string(y);
+    }
+
 public:
     void setField(
         unsigned short int xValue,
@@ -62,20 +79,33 @@ public:
         y = yValue;
         id = idValue;
         isBlack = isOdd(x) == isOdd(y);
-        piece = getPieceType(id);
-        player = getPiecePlayer(idValue);
+        piece = initPieceType(id);
+        player = initPiecePlayer(idValue);
     }
 
-    std::string getField()
+    void printField()
     {
-        return getChar(x) + std::to_string(y)
-               //
-               //    + " color: " + std::to_string(isBlack)
-               //
-               + " piece: " + std::to_string(piece)
-               //
-               //    + " player: " + std::to_string(player)
-               //
-               + " | ";
+        std::cout << std::setw(2) << getField();
+        std::cout << std::setw(16) << getPieceName(piece) + " " + getPiecePlayer(player) + " | ";
+    }
+
+    unsigned short int getId()
+    {
+        return id;
+    }
+
+    Piece getPiece()
+    {
+        return piece;
+    }
+
+    void setPiece(Piece newPiece)
+    {
+        piece = newPiece;
+    }
+
+    void setPlayer(Player currentPlayer)
+    {
+        player = currentPlayer;
     }
 };
