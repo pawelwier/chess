@@ -8,9 +8,9 @@ public:
     {
     }
 
-    void move()
+    void getAvailableFields()
     {
-        std::cout << "moving pawn" << std::endl;
+        std::cout << "looking for pawn fields ..." << std::endl;
     }
 };
 
@@ -21,9 +21,9 @@ public:
     {
     }
 
-    void move()
+    void getAvailableFields()
     {
-        std::cout << "moving rook" << std::endl;
+        std::cout << "looking for rook fields ..." << std::endl;
     }
 };
 
@@ -34,9 +34,9 @@ public:
     {
     }
 
-    void move()
+    void getAvailableFields()
     {
-        std::cout << "moving knight" << std::endl;
+        std::cout << "looking for knight fields ..." << std::endl;
     }
 };
 
@@ -47,9 +47,9 @@ public:
     {
     }
 
-    void move()
+    void getAvailableFields()
     {
-        std::cout << "moving bishop" << std::endl;
+        std::cout << "looking for bishop fields ..." << std::endl;
     }
 };
 
@@ -60,9 +60,9 @@ public:
     {
     }
 
-    void move()
+    void getAvailableFields()
     {
-        std::cout << "moving queen" << std::endl;
+        std::cout << "looking for queen fields ..." << std::endl;
     }
 };
 
@@ -73,8 +73,8 @@ public:
     {
     }
 
-    void move()
+    void getAvailableFields()
     {
-        std::cout << "moving king" << std::endl;
+        std::cout << "looking for king fields ..." << std::endl;
     }
 };

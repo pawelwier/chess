@@ -20,5 +20,5 @@ unsigned short int pawnIds[pawnCount] = {8, 9, 10, 11, 12, 13, 14, 15, 48, 49, 5
 unsigned short int rookIds[rookCount] = {0, 7, 56, 63};
 unsigned short int knightIds[knightCount] = {1, 6, 57, 62};
 unsigned short int bishopIds[bishopCount] = {2, 5, 58, 61};
-unsigned short int queenIds[2] = {3, 60};
-unsigned short int kingIds[2] = {4, 59};
+unsigned short int queenIds[2] = {3, 59};
+unsigned short int kingIds[2] = {4, 60};

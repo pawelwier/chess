@@ -45,7 +45,12 @@ public:
         fieldId_ = fieldId;
     }
 
-    virtual void move() = 0;
+    virtual void getAvailableFields() = 0;
+
+    void move(unsigned int to)
+    {
+        setFieldId(to);
+    }
 
     std::string getName()
     {
@@ -61,6 +66,11 @@ public:
     {
         return fieldId_;
     }
+
+    void setFieldId(unsigned int fieldId)
+    {
+        fieldId_ = fieldId;
+    }
 };
 
 Piece *findPieceByFieldId(std::vector<Piece *> v, unsigned int fieldId)
@@ -68,7 +78,10 @@ Piece *findPieceByFieldId(std::vector<Piece *> v, unsigned int fieldId)
     auto result = std::find_if(v.begin(), v.end(), [fieldId](Piece *piece)
                                { return piece->getFieldId() == fieldId; }); // TODO: read into
     ptrdiff_t index = std::distance(v.begin(), result);
-    // if (result == v.end()) { ... } // ??
+    if (result == v.end())
+    {
+        return 0;
+    } // ??
     return v[index];
 }
 

@@ -5,6 +5,11 @@
 
 #define log(x) std::cout << x
 
+bool isPlayerPiece(Piece *piece, Player player)
+{
+    return piece->getPlayer() == player;
+}
+
 int main()
 {
     bool gameOn = true;
@@ -54,41 +59,52 @@ int main()
     }
 
     game.printBoard();
-    // log("\n");
+    log("\n");
 
-    /*
-        while (gameOn) // TODO: refactor
+    while (gameOn) // TODO: refactor
+    {
+        Player player = game.getCurrentPlayer();
+        std::string playerColor = player == 1 ? "White" : "Black";
+
+        log("Move: ");
+        log(moveCount);
+
+        log("\n");
+
+        log(playerColor);
+        log("\'s turn. ");
+
+        std::string from, to;
+
+        log("Select piece: ");
+        std::cin >> from;
+        unsigned short int fromIndex = getFieldIndexByPosition(fields, from);
+
+        Piece *p = findPieceByFieldId(game.getPieces(), fromIndex);
+
+        if (!p)
         {
-            std::string player = game.getCurrentPlayer() == 1 ? "White" : "Black";
-
-            log("Move: ");
-            log(moveCount);
-
-            log("\n");
-
-            log(player);
-            log("\'s turn. ");
-
-            std::string from, to;
-
-            log("Select piece: ");
-            std::cin >> from;
-            unsigned short int fromIndex = getFieldIndexByPosition(fields, from);
-
-            log("Move to: ");
-            std::cin >> to;
-            unsigned short int toIndex = getFieldIndexByPosition(fields, to);
-
-            log("\n");
-
-            // move(game, fields, fromIndex, toIndex);
-
-            printBoard(fields);
-
-            log("\n\n");
-
-            game.nextPlayer();
-            moveCount++;
+            log("\nNo piece there. Try again.\n\n");
+            continue;
         }
-    */
+
+        if (!isPlayerPiece(p, player))
+        {
+            log("\nNot your piece! Try again.\n\n");
+            continue;
+        }
+
+        log("Move to: ");
+        std::cin >> to;
+        unsigned short int toIndex = getFieldIndexByPosition(fields, to);
+
+        p->move(toIndex);
+
+        game.printBoard();
+
+        log("\n\n");
+
+        game.nextPlayer();
+        moveCount++;
+    }
 }

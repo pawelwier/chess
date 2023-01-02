@@ -29,6 +29,11 @@ public:
         return currentPlayer_;
     }
 
+    std::vector<Piece *> getPieces()
+    {
+        return pieces_;
+    }
+
     void nextPlayer()
     {
         currentPlayer_ == white ? setPlayer(black) : setPlayer(white);
