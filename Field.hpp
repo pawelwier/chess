@@ -3,36 +3,15 @@
 #include <iomanip>
 
 #include "utils.hpp"
-#include "boardData.hpp"
+#include "pieces/PieceTypes.hpp"
 #include "initialConfig.hpp"
+
+#define loop(x) for (int i = 0; i < x; i++)
 
 bool isInTypeArray(unsigned short int ids[], size_t s, unsigned short int id)
 {
     unsigned short int *end = ids + s;
     return std::find(ids, end, id) != end;
-}
-
-Piece initPieceType(unsigned short int id) // refactor
-{
-    for (size_t i = 0; i < 2; i++)
-    {
-        for (size_t j = 0; j < 2; j++)
-        {
-            if (isWithinValues(id, pawnIds[j]))
-                return pawn;
-        };
-    }
-    if (isInTypeArray(rookIds, rookCount, id))
-        return rook;
-    if (isInTypeArray(knightIds, knightCount, id))
-        return knight;
-    if (isInTypeArray(bishopIds, bishopCount, id))
-        return bishop;
-    if (isInTypeArray(queenIds, queenCount, id))
-        return queen;
-    if (isInTypeArray(kingIds, kingCount, id))
-        return king;
-    return none;
 }
 
 Player initPiecePlayer(short unsigned id)
@@ -44,81 +23,74 @@ Player initPiecePlayer(short unsigned id)
                : empty;
 }
 
-std::string getPieceName(Piece piece)
-{
-    return pieces[piece];
-}
-
-std::string getPiecePlayer(Player player)
-{
-    return players[player];
-}
-
 class Field
 {
 private:
-    unsigned short int x;
-    unsigned short int y;
-    unsigned short int id; // delete, use x & y only?
-    bool isBlack;
-    Piece piece;
-    Player player;
+    unsigned short int x_;
+    unsigned short int y_;
+    unsigned short int id_; // delete, use x & y only?
+    bool isBlack_;
+    unsigned int pieceId;
 
 public:
     std::string getField()
     {
-        return getChar(x) + std::to_string(y);
+        return getChar(x_) + std::to_string(y_);
     }
 
     void setField(
-        unsigned short int xValue,
-        unsigned short int yValue,
-        unsigned short int idValue)
+        unsigned short int x,
+        unsigned short int y,
+        unsigned short int id)
     {
-        x = xValue;
-        y = yValue;
-        id = idValue;
-        isBlack = isOdd(x) == isOdd(y);
-        piece = initPieceType(id);
-        player = initPiecePlayer(idValue);
-    }
-
-    void printField()
-    {
-        std::cout << std::setw(2) << getField();
-        std::cout << std::setw(16) << getPieceName(piece) + " " + getPiecePlayer(player) + " | ";
+        x_ = x;
+        y_ = y;
+        id_ = id;
+        isBlack_ = isOdd(x) == isOdd(y);
     }
 
     unsigned short int getId()
     {
-        return id;
+        return id_;
     }
 
-    Piece getPiece()
+    std::string getFieldColor()
     {
-        return piece;
-    }
-
-    void setPiece(Piece newPiece)
-    {
-        piece = newPiece;
-    }
-
-    void setPlayer(Player currentPlayer)
-    {
-        player = currentPlayer;
+        return isBlack_ ? "(b)" : "(w)";
     }
 };
 
-unsigned short int getFieldIndexByPosition(Field fields[], unsigned short int size, std::string position)
+unsigned short int getFieldIndexByPosition(std::array<Field, FIELD_COUNT> &fields, std::string position)
 {
     int index;
-    for (size_t i = 0; i < size; i++)
+
+    for (size_t i = 0; i < FIELD_COUNT; i++)
     {
         if (fields[i].getField() == position)
         {
             index = i;
         }
     }
+
     return index;
+}
+
+void getInitialSetup(std::array<Field, FIELD_COUNT> &fields, int startNum, int startLetter)
+{
+    int xIndex = startLetter;
+    int yIndex = startNum;
+    int fieldIndex = 0;
+
+    loop(SIZE)
+    {
+        loop(SIZE)
+        {
+            fields[fieldIndex].setField(xIndex, yIndex, fieldIndex);
+
+            xIndex++;
+            fieldIndex++;
+        }
+        xIndex = startLetter;
+        yIndex++;
+    }
 }
