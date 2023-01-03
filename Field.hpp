@@ -3,10 +3,15 @@
 #include <iomanip>
 
 #include "utils.hpp"
-#include "pieces/PieceTypes.hpp"
 #include "initialConfig.hpp"
 
 #define loop(x) for (int i = 0; i < x; i++)
+
+enum Player
+{
+    white,
+    black
+};
 
 bool isInTypeArray(unsigned short int ids[], size_t s, unsigned short int id)
 {
@@ -16,11 +21,7 @@ bool isInTypeArray(unsigned short int ids[], size_t s, unsigned short int id)
 
 Player initPiecePlayer(short unsigned id)
 {
-    return isWithinValues(id, whitePieces)
-               ? white
-           : isWithinValues(id, blackPieces)
-               ? black
-               : empty;
+    return isWithinValues(id, whitePieces) ? white : black;
 }
 
 class Field

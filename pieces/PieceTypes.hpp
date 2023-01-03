@@ -1,5 +1,7 @@
-#include <iostream>
+#include <array>
 #include "Piece.hpp"
+
+#define log(x) std::cout << x
 
 class Pawn : public Piece
 {
@@ -8,9 +10,30 @@ public:
     {
     }
 
-    void getAvailableFields()
+    void getAvailableFields(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
     {
-        std::cout << "looking for pawn fields ..." << std::endl;
+        Player player = this->getPlayer();
+
+        unsigned int firstIndex = player ? from - SIZE : from + SIZE;
+
+        std::vector<unsigned int> available{firstIndex};
+
+        unsigned short int *isFirstMove = std::find(std::begin(pawnIds), std::end(pawnIds), from);
+
+        if (isFirstMove != std::end(pawnIds))
+        {
+            available.push_back(player ? firstIndex - SIZE : firstIndex + SIZE);
+        }
+
+        for (int i : available)
+        {
+            Piece *p = findPieceByFieldId(pieces, i);
+            if (p)
+            {
+                log("can't move to");
+                log(board[i].getField()); // TODO: finish
+            }
+        }
     }
 };
 
@@ -21,7 +44,7 @@ public:
     {
     }
 
-    void getAvailableFields()
+    void getAvailableFields(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
     {
         std::cout << "looking for rook fields ..." << std::endl;
     }
@@ -34,7 +57,8 @@ public:
     {
     }
 
-    void getAvailableFields()
+    void getAvailableFields(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
+
     {
         std::cout << "looking for knight fields ..." << std::endl;
     }
@@ -47,7 +71,7 @@ public:
     {
     }
 
-    void getAvailableFields()
+    void getAvailableFields(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
     {
         std::cout << "looking for bishop fields ..." << std::endl;
     }
@@ -60,7 +84,7 @@ public:
     {
     }
 
-    void getAvailableFields()
+    void getAvailableFields(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
     {
         std::cout << "looking for queen fields ..." << std::endl;
     }
@@ -73,7 +97,7 @@ public:
     {
     }
 
-    void getAvailableFields()
+    void getAvailableFields(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
     {
         std::cout << "looking for king fields ..." << std::endl;
     }

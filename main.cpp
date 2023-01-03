@@ -1,6 +1,4 @@
-#include <iostream>
 #include <cmath>
-#include <array>
 #include "Game.hpp"
 
 #define log(x) std::cout << x
@@ -13,7 +11,6 @@ bool isPlayerPiece(Piece *piece, Player player)
 int main()
 {
     bool gameOn = true;
-    int moveCount = 1;
 
     std::array<Field, FIELD_COUNT> fields;
     std::vector<Piece *> pieces;
@@ -64,10 +61,10 @@ int main()
     while (gameOn) // TODO: refactor
     {
         Player player = game.getCurrentPlayer();
-        std::string playerColor = player == 1 ? "White" : "Black";
+        std::string playerColor = !player ? "White" : "Black";
 
         log("Move: ");
-        log(moveCount);
+        log(game.getMove());
 
         log("\n");
 
@@ -94,6 +91,8 @@ int main()
             continue;
         }
 
+        p->getAvailableFields(fromIndex, game.getBoard(), game.getPieces());
+
         log("Move to: ");
         std::cin >> to;
         unsigned short int toIndex = getFieldIndexByPosition(fields, to);
@@ -102,9 +101,9 @@ int main()
 
         game.printBoard();
 
-        log("\n\n");
+        log("\n");
 
         game.nextPlayer();
-        moveCount++;
+        game.nextMove();
     }
 }

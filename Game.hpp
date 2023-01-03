@@ -1,8 +1,7 @@
 #include <iostream>
 #include <iomanip>
-#include <array>
-#include <vector>
-#include "Field.hpp"
+
+#include "./pieces/PieceTypes.hpp"
 
 class Game
 {
@@ -10,13 +9,20 @@ private:
     Player currentPlayer_;
     std::array<Field, FIELD_COUNT> board_;
     std::vector<Piece *> pieces_;
+    unsigned int move_;
 
 public:
     Game(std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
     {
+        move_ = 1;
         board_ = board;
         currentPlayer_ = white;
         pieces_ = pieces;
+    }
+
+    std::array<Field, FIELD_COUNT> getBoard()
+    {
+        return board_;
     }
 
     void setPlayer(Player newPlayer)
@@ -34,9 +40,19 @@ public:
         return pieces_;
     }
 
+    unsigned int getMove()
+    {
+        return move_;
+    }
+
     void nextPlayer()
     {
         currentPlayer_ == white ? setPlayer(black) : setPlayer(white);
+    }
+
+    void nextMove()
+    {
+        move_++;
     }
 
     void addPiece(Piece *piece)

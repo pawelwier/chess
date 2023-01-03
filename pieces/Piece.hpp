@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <iterator>
 
+#include "../Field.hpp"
+
 enum PieceType
 {
     none,
@@ -12,13 +14,6 @@ enum PieceType
     bishop,
     queen,
     king
-};
-
-enum Player
-{
-    empty,
-    white,
-    black
 };
 
 std::map<PieceType, std::string> pieces{
@@ -45,7 +40,7 @@ public:
         fieldId_ = fieldId;
     }
 
-    virtual void getAvailableFields() = 0;
+    virtual void getAvailableFields(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces) = 0;
 
     void move(unsigned int to)
     {
@@ -87,5 +82,5 @@ Piece *findPieceByFieldId(std::vector<Piece *> v, unsigned int fieldId)
 
 std::string getPlayerColor(Player player)
 {
-    return player == 1 ? "(W.)" : "(B.)";
+    return !player ? "(W.)" : "(B.)";
 }
