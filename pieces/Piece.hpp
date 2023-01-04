@@ -40,7 +40,7 @@ public:
         fieldId_ = fieldId;
     }
 
-    virtual void getAvailableFields(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces) = 0;
+    virtual std::vector<unsigned int> getAvailableFieldIds(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces) = 0;
 
     void move(unsigned int to)
     {
@@ -78,6 +78,12 @@ Piece *findPieceByFieldId(std::vector<Piece *> v, unsigned int fieldId)
         return 0;
     } // ??
     return v[index];
+}
+
+bool isPlayersPieceOnField(Player player, std::vector<Piece *> v, unsigned int fieldId)
+{
+    Piece *piece = findPieceByFieldId(v, fieldId);
+    return piece->getPlayer() == player;
 }
 
 std::string getPlayerColor(Player player)

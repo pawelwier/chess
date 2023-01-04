@@ -3,6 +3,12 @@
 
 #define log(x) std::cout << x
 
+bool isFieldEmpty(unsigned int index, std::vector<Piece *> pieces)
+{
+    Piece *piece = findPieceByFieldId(pieces, index);
+    return !piece;
+}
+
 class Pawn : public Piece
 {
 public:
@@ -10,30 +16,28 @@ public:
     {
     }
 
-    void getAvailableFields(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
+    std::vector<unsigned int> getAvailableFieldIds(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
     {
+        std::vector<unsigned int> available{};
+
         Player player = this->getPlayer();
 
+        // Check if there is piece on field in front
         unsigned int firstIndex = player ? from - SIZE : from + SIZE;
+        if (isFieldEmpty(firstIndex, pieces))
+            available.push_back(firstIndex);
 
-        std::vector<unsigned int> available{firstIndex};
-
+        // Check if first move
+        // TODO: add move history to Game, check if piece has been moved
         unsigned short int *isFirstMove = std::find(std::begin(pawnIds), std::end(pawnIds), from);
-
         if (isFirstMove != std::end(pawnIds))
         {
-            available.push_back(player ? firstIndex - SIZE : firstIndex + SIZE);
+            unsigned int longMoveIndex = player ? firstIndex - SIZE : firstIndex + SIZE;
+            if (isFieldEmpty(longMoveIndex, pieces))
+                available.push_back(longMoveIndex);
         }
 
-        for (int i : available)
-        {
-            Piece *p = findPieceByFieldId(pieces, i);
-            if (p)
-            {
-                log("can't move to");
-                log(board[i].getField()); // TODO: finish
-            }
-        }
+        return available;
     }
 };
 
@@ -44,9 +48,10 @@ public:
     {
     }
 
-    void getAvailableFields(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
+    std::vector<unsigned int> getAvailableFieldIds(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
     {
         std::cout << "looking for rook fields ..." << std::endl;
+        return {};
     }
 };
 
@@ -57,10 +62,11 @@ public:
     {
     }
 
-    void getAvailableFields(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
+    std::vector<unsigned int> getAvailableFieldIds(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
 
     {
         std::cout << "looking for knight fields ..." << std::endl;
+        return {};
     }
 };
 
@@ -71,9 +77,10 @@ public:
     {
     }
 
-    void getAvailableFields(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
+    std::vector<unsigned int> getAvailableFieldIds(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
     {
         std::cout << "looking for bishop fields ..." << std::endl;
+        return {};
     }
 };
 
@@ -84,9 +91,10 @@ public:
     {
     }
 
-    void getAvailableFields(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
+    std::vector<unsigned int> getAvailableFieldIds(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
     {
         std::cout << "looking for queen fields ..." << std::endl;
+        return {};
     }
 };
 
@@ -97,8 +105,9 @@ public:
     {
     }
 
-    void getAvailableFields(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
+    std::vector<unsigned int> getAvailableFieldIds(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
     {
         std::cout << "looking for king fields ..." << std::endl;
+        return {};
     }
 };

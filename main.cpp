@@ -63,6 +63,8 @@ int main()
         Player player = game.getCurrentPlayer();
         std::string playerColor = !player ? "White" : "Black";
 
+        std::array<Field, FIELD_COUNT> board = game.getBoard();
+
         log("Move: ");
         log(game.getMove());
 
@@ -91,13 +93,37 @@ int main()
             continue;
         }
 
-        p->getAvailableFields(fromIndex, game.getBoard(), game.getPieces());
+        std::vector<unsigned int> available = p->getAvailableFieldIds(fromIndex, board, game.getPieces());
+
+        if (available.size())
+        {
+            log("Possible moves: ");
+            for (unsigned int AvailableIndex : available)
+            {
+                log(board[AvailableIndex].getField() + " ");
+            }
+            log("\n");
+        }
+        else
+        {
+            log("No moves possible\n\n");
+            continue;
+        }
 
         log("Move to: ");
         std::cin >> to;
-        unsigned short int toIndex = getFieldIndexByPosition(fields, to);
+        unsigned int toIndex = getFieldIndexByPosition(fields, to);
 
-        p->move(toIndex);
+        if (std::find(available.begin(), available.end(), toIndex) != available.end())
+        {
+            p->move(toIndex);
+        }
+        else
+        {
+            // TODO: leave piece selected
+            log("\nCan't move there\n\n");
+            continue;
+        }
 
         game.printBoard();
 
