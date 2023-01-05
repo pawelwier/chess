@@ -60,6 +60,13 @@ public:
         pieces_.push_back(piece);
     }
 
+    void takePiece(unsigned int fieldId)
+    {
+        std::erase_if(pieces_, [fieldId](Piece *p)
+                      { return p->getFieldId() == fieldId; });
+        // TODO: add to taken pieces list in Game
+    }
+
     void printPieces()
     {
         for (Piece *p : pieces_)

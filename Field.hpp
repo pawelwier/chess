@@ -5,7 +5,7 @@
 #include "utils.hpp"
 #include "initialConfig.hpp"
 
-#define loop(x) for (int i = 0; i < x; i++)
+#define LOOP(x) for (int i = 0; i < x; i++)
 
 enum Player
 {
@@ -92,9 +92,9 @@ void getInitialSetup(std::array<Field, FIELD_COUNT> &fields, int startNum, int s
     int yIndex = startNum;
     int fieldIndex = 0;
 
-    loop(SIZE)
+    LOOP(SIZE)
     {
-        loop(SIZE)
+        LOOP(SIZE)
         {
             fields[fieldIndex].setField(xIndex, yIndex, fieldIndex);
 

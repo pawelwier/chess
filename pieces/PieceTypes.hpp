@@ -1,6 +1,6 @@
 #include "Piece.hpp"
 
-#define log(x) std::cout << x
+#define LOG(x) std::cout << x
 
 bool isFieldEmpty(unsigned int index, std::vector<Piece *> pieces)
 {
@@ -13,6 +13,23 @@ bool isOpponentPieceOnField(unsigned int index, std::vector<Piece *> pieces, Pla
     Piece *piece = findPieceByFieldId(pieces, index);
     Player opponent = !player ? black : white;
     return !!piece && piece->getPlayer() == opponent;
+}
+
+void addMoveOptions(std::vector<unsigned int> ids, std::vector<Piece *> pieces, MoveOptions *options, Player player)
+{
+    LOOP(ids.size())
+    {
+        if (isFieldEmpty(ids[i], pieces))
+            options->addMove(ids[i]);
+        else
+        {
+            if (isOpponentPieceOnField(ids[i], pieces, player))
+            {
+                options->addTake(ids[i]);
+            }
+            break;
+        }
+    }
 }
 
 class Pawn : public Piece
@@ -31,6 +48,7 @@ public:
         Player player = this->getPlayer();
 
         // Move
+
         // Check if there is piece on field in front
         unsigned int firstIndex = player ? from - SIZE : from + SIZE;
         if (isFieldEmpty(firstIndex, pieces))
@@ -47,6 +65,9 @@ public:
         }
 
         // Take
+
+        // TODO: add en passant
+
         unsigned int x = board[from].getX();
 
         bool isBorderLeft = x == START_LETTER;
@@ -59,14 +80,6 @@ public:
             options->addTake(takeLeft);
         if (!isBorderRight && isOpponentPieceOnField(takeRight, pieces, player))
             options->addTake(takeRight);
-
-        // log("attacker fields: ");
-        // for (unsigned int take : options->getTakes())
-        // {
-        //     log("\n");
-        //     log(board[take].getField());
-        //     log("\n");
-        // }
     }
 };
 
@@ -83,7 +96,48 @@ public:
         std::array<Field, FIELD_COUNT> board,
         std::vector<Piece *> pieces)
     {
-        std::cout << "looking for rook fields ..." << std::endl;
+        Player player = this->getPlayer();
+
+        unsigned int x = board[from].getX();
+        unsigned int y = board[from].getY();
+
+        std::vector<unsigned int> horizontalLeft, horizontalRight, verticalUp, verticalDown;
+
+        for (Field f : board)
+        {
+            if (f.getX() == x && f.getY() != y)
+                if (f.getId() > from)
+                {
+                    verticalUp.push_back(f.getId());
+                }
+                else
+                {
+                    verticalDown.push_back(f.getId());
+                }
+            if (f.getY() == y && f.getX() != x)
+                if (f.getId() > from)
+                {
+                    horizontalRight.push_back(f.getId());
+                }
+                else
+                {
+                    horizontalLeft.push_back(f.getId());
+                }
+        }
+
+        reverseVector(verticalDown);
+        reverseVector(horizontalLeft);
+
+        std::array<std::vector<unsigned int>, 4> moveOptions{
+            horizontalLeft,
+            horizontalRight,
+            verticalUp,
+            verticalDown};
+
+        for (std::vector<unsigned int> moveSet : moveOptions)
+        {
+            addMoveOptions(moveSet, pieces, options, player);
+        }
     }
 };
 

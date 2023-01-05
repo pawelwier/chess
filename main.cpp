@@ -1,8 +1,6 @@
 #include <cmath>
 #include "Game.hpp"
 
-#define log(x) std::cout << x
-
 bool isPlayerPiece(Piece *piece, Player player)
 {
     return piece->getPlayer() == player;
@@ -56,7 +54,7 @@ int main()
     }
 
     game.printBoard();
-    log("\n");
+    LOG("\n");
 
     while (gameOn) // TODO: refactor
     {
@@ -65,17 +63,17 @@ int main()
 
         std::array<Field, FIELD_COUNT> board = game.getBoard();
 
-        log("Move: ");
-        log(game.getMove());
+        LOG("Move: ");
+        LOG(game.getMove());
 
-        log("\n");
+        LOG("\n");
 
-        log(playerColor);
-        log("\'s turn. ");
+        LOG(playerColor);
+        LOG("\'s turn. ");
 
         std::string from, to;
 
-        log("Select piece: ");
+        LOG("Select piece: ");
         std::cin >> from;
         unsigned short int fromIndex = getFieldIndexByPosition(fields, from);
 
@@ -83,13 +81,13 @@ int main()
 
         if (!p)
         {
-            log("\nNo piece there. Try again.\n\n");
+            LOG("\nNo piece there. Try again.\n\n");
             continue;
         }
 
         if (!isPlayerPiece(p, player))
         {
-            log("\nNot your piece! Try again.\n\n");
+            LOG("\nNot your piece! Try again.\n\n");
             continue;
         }
 
@@ -101,52 +99,53 @@ int main()
 
         if (moves.size())
         {
-            log("Possible moves: ");
+            LOG("Possible moves: ");
             for (unsigned int move : moves)
             {
-                log(board[move].getField() + " ");
+                LOG(board[move].getField() + " ");
             }
-            log("\n");
+            LOG("\n");
         }
 
         if (takes.size())
         {
-            log("Possible takes: ");
+            LOG("Possible takes: ");
             for (unsigned int take : takes)
             {
-                log(board[take].getField() + " ");
+                LOG(board[take].getField() + " ");
             }
-            log("\n");
+            LOG("\n");
         }
 
         if (!moves.size() && !takes.size())
         {
-            log("No moves possible\n\n");
+            LOG("No moves possible\n\n");
             continue;
         }
 
-        log("Move to: ");
+        LOG("Move to: ");
         std::cin >> to;
         unsigned int toIndex = getFieldIndexByPosition(fields, to);
 
-        if (includes(takes, toIndex))
+        bool takeOk = includes(takes, toIndex);
+        bool moveOk = includes(moves, toIndex);
+
+        if (takeOk || moveOk)
         {
-            p->take(toIndex);
-        }
-        else if (includes(moves, toIndex))
-        {
+            if (takeOk)
+            {
+                game.takePiece(toIndex);
+            }
             p->move(toIndex);
         }
         else
         {
             // TODO: leave piece selected
-            log("\nCan't move there\n\n");
+            LOG("\nCan't move there\n\n");
             continue;
         }
 
         game.printBoard();
-
-        log("\n");
 
         delete options;
 

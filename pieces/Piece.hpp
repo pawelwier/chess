@@ -52,11 +52,6 @@ public:
         setFieldId(to);
     }
 
-    void take(unsigned int to)
-    {
-        std::cout << "Bam!" << std::endl;
-    }
-
     std::string getName()
     {
         return pieces[type_];
@@ -78,15 +73,21 @@ public:
     }
 };
 
+unsigned int findPieceIndex(std::vector<Piece *> v, unsigned int fieldId)
+{
+    std::vector<Piece *>::iterator result = std::find_if(v.begin(), v.end(), [fieldId](Piece *piece)
+                                                         { return piece->getFieldId() == fieldId; }); // TODO: read into
+    ptrdiff_t index = std::distance(v.begin(), result);
+    return index;
+}
+
 Piece *findPieceByFieldId(std::vector<Piece *> v, unsigned int fieldId)
 {
-    auto result = std::find_if(v.begin(), v.end(), [fieldId](Piece *piece)
-                               { return piece->getFieldId() == fieldId; }); // TODO: read into
-    ptrdiff_t index = std::distance(v.begin(), result);
-    if (result == v.end())
+    unsigned int index = findPieceIndex(v, fieldId);
+    if (index == -1 || index == v.size()) // TODO: is that ok??
     {
         return 0;
-    } // ??
+    }
     return v[index];
 }
 
