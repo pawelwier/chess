@@ -1,4 +1,3 @@
-#include <array>
 #include "Piece.hpp"
 
 #define log(x) std::cout << x
@@ -9,6 +8,13 @@ bool isFieldEmpty(unsigned int index, std::vector<Piece *> pieces)
     return !piece;
 }
 
+bool isOpponentPieceOnField(unsigned int index, std::vector<Piece *> pieces, Player player)
+{
+    Piece *piece = findPieceByFieldId(pieces, index);
+    Player opponent = !player ? black : white;
+    return !!piece && piece->getPlayer() == opponent;
+}
+
 class Pawn : public Piece
 {
 public:
@@ -16,16 +22,19 @@ public:
     {
     }
 
-    std::vector<unsigned int> getAvailableFieldIds(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
+    void getAvailableFieldIds(
+        MoveOptions *options,
+        unsigned int from,
+        std::array<Field, FIELD_COUNT> board,
+        std::vector<Piece *> pieces)
     {
-        std::vector<unsigned int> available{};
-
         Player player = this->getPlayer();
 
+        // Move
         // Check if there is piece on field in front
         unsigned int firstIndex = player ? from - SIZE : from + SIZE;
         if (isFieldEmpty(firstIndex, pieces))
-            available.push_back(firstIndex);
+            options->addMove(firstIndex);
 
         // Check if first move
         // TODO: add move history to Game, check if piece has been moved
@@ -34,10 +43,30 @@ public:
         {
             unsigned int longMoveIndex = player ? firstIndex - SIZE : firstIndex + SIZE;
             if (isFieldEmpty(longMoveIndex, pieces))
-                available.push_back(longMoveIndex);
+                options->addMove(longMoveIndex);
         }
 
-        return available;
+        // Take
+        unsigned int x = board[from].getX();
+
+        bool isBorderLeft = x == START_LETTER;
+        bool isBorderRight = x == (START_LETTER + SIZE - 1);
+
+        unsigned int takeRight = player ? (from - SIZE + 1) : (from + SIZE + 1);
+        unsigned int takeLeft = player ? (from - SIZE - 1) : (from + SIZE - 1);
+
+        if (!isBorderLeft && isOpponentPieceOnField(takeLeft, pieces, player))
+            options->addTake(takeLeft);
+        if (!isBorderRight && isOpponentPieceOnField(takeRight, pieces, player))
+            options->addTake(takeRight);
+
+        // log("attacker fields: ");
+        // for (unsigned int take : options->getTakes())
+        // {
+        //     log("\n");
+        //     log(board[take].getField());
+        //     log("\n");
+        // }
     }
 };
 
@@ -48,10 +77,13 @@ public:
     {
     }
 
-    std::vector<unsigned int> getAvailableFieldIds(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
+    void getAvailableFieldIds(
+        MoveOptions *options,
+        unsigned int from,
+        std::array<Field, FIELD_COUNT> board,
+        std::vector<Piece *> pieces)
     {
         std::cout << "looking for rook fields ..." << std::endl;
-        return {};
     }
 };
 
@@ -62,11 +94,13 @@ public:
     {
     }
 
-    std::vector<unsigned int> getAvailableFieldIds(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
-
+    void getAvailableFieldIds(
+        MoveOptions *options,
+        unsigned int from,
+        std::array<Field, FIELD_COUNT> board,
+        std::vector<Piece *> pieces)
     {
         std::cout << "looking for knight fields ..." << std::endl;
-        return {};
     }
 };
 
@@ -77,10 +111,13 @@ public:
     {
     }
 
-    std::vector<unsigned int> getAvailableFieldIds(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
+    void getAvailableFieldIds(
+        MoveOptions *options,
+        unsigned int from,
+        std::array<Field, FIELD_COUNT> board,
+        std::vector<Piece *> pieces)
     {
         std::cout << "looking for bishop fields ..." << std::endl;
-        return {};
     }
 };
 
@@ -91,10 +128,13 @@ public:
     {
     }
 
-    std::vector<unsigned int> getAvailableFieldIds(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
+    void getAvailableFieldIds(
+        MoveOptions *options,
+        unsigned int from,
+        std::array<Field, FIELD_COUNT> board,
+        std::vector<Piece *> pieces)
     {
         std::cout << "looking for queen fields ..." << std::endl;
-        return {};
     }
 };
 
@@ -105,9 +145,12 @@ public:
     {
     }
 
-    std::vector<unsigned int> getAvailableFieldIds(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces)
+    void getAvailableFieldIds(
+        MoveOptions *options,
+        unsigned int from,
+        std::array<Field, FIELD_COUNT> board,
+        std::vector<Piece *> pieces)
     {
         std::cout << "looking for king fields ..." << std::endl;
-        return {};
     }
 };

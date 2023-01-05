@@ -93,18 +93,33 @@ int main()
             continue;
         }
 
-        std::vector<unsigned int> available = p->getAvailableFieldIds(fromIndex, board, game.getPieces());
+        MoveOptions *options = new MoveOptions;
+        p->getAvailableFieldIds(options, fromIndex, board, game.getPieces());
 
-        if (available.size())
+        std::vector<unsigned int> moves = options->getMoves();
+        std::vector<unsigned int> takes = options->getTakes();
+
+        if (moves.size())
         {
             log("Possible moves: ");
-            for (unsigned int AvailableIndex : available)
+            for (unsigned int move : moves)
             {
-                log(board[AvailableIndex].getField() + " ");
+                log(board[move].getField() + " ");
             }
             log("\n");
         }
-        else
+
+        if (takes.size())
+        {
+            log("Possible takes: ");
+            for (unsigned int take : takes)
+            {
+                log(board[take].getField() + " ");
+            }
+            log("\n");
+        }
+
+        if (!moves.size() && !takes.size())
         {
             log("No moves possible\n\n");
             continue;
@@ -114,7 +129,11 @@ int main()
         std::cin >> to;
         unsigned int toIndex = getFieldIndexByPosition(fields, to);
 
-        if (std::find(available.begin(), available.end(), toIndex) != available.end())
+        if (includes(takes, toIndex))
+        {
+            p->take(toIndex);
+        }
+        else if (includes(moves, toIndex))
         {
             p->move(toIndex);
         }
@@ -128,6 +147,8 @@ int main()
         game.printBoard();
 
         log("\n");
+
+        delete options;
 
         game.nextPlayer();
         game.nextMove();

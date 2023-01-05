@@ -55,6 +55,16 @@ public:
         return id_;
     }
 
+    unsigned short int getX()
+    {
+        return x_;
+    }
+
+    unsigned short int getY()
+    {
+        return y_;
+    }
+
     std::string getFieldColor()
     {
         return isBlack_ ? "(b)" : "(w)";

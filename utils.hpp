@@ -12,3 +12,9 @@ bool isWithinValues(short unsigned int value, short unsigned int values[2])
 {
     return value >= values[0] && value <= values[1];
 }
+
+template <typename T>
+bool includes(std::vector<T> vector, T value)
+{
+    return std::find(vector.begin(), vector.end(), value) != vector.end();
+}

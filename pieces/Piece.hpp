@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iterator>
 
+#include "../MoveOptions.hpp"
 #include "../Field.hpp"
 
 enum PieceType
@@ -40,11 +41,20 @@ public:
         fieldId_ = fieldId;
     }
 
-    virtual std::vector<unsigned int> getAvailableFieldIds(unsigned int from, std::array<Field, FIELD_COUNT> board, std::vector<Piece *> pieces) = 0;
+    virtual void getAvailableFieldIds(
+        MoveOptions *options,
+        unsigned int from,
+        std::array<Field, FIELD_COUNT> board,
+        std::vector<Piece *> pieces) = 0;
 
     void move(unsigned int to)
     {
         setFieldId(to);
+    }
+
+    void take(unsigned int to)
+    {
+        std::cout << "Bam!" << std::endl;
     }
 
     std::string getName()
