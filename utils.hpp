@@ -1,5 +1,7 @@
 #include <algorithm>
 
+#include "initialConfig.hpp"
+
 bool isOdd(short unsigned int number)
 {
     return number % 2;
@@ -8,6 +10,11 @@ bool isOdd(short unsigned int number)
 char getChar(short unsigned int asciiNum)
 {
     return char(asciiNum);
+}
+
+std::string getFieldCoordinates(unsigned int x, unsigned int y)
+{
+    return getChar(x) + std::to_string(y);
 }
 
 bool isWithinValues(short unsigned int value, short unsigned int values[2])

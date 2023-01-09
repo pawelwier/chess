@@ -15,7 +15,12 @@ bool isOpponentPieceOnField(unsigned int index, std::vector<Piece *> pieces, Pla
     return !!piece && piece->getPlayer() == opponent;
 }
 
-void addMoveOptions(std::vector<unsigned int> ids, std::vector<Piece *> pieces, MoveOptions *options, Player player)
+bool isOutsideBoard(unsigned int x, unsigned int y)
+{
+    return (x < START_LETTER) || (x > (START_LETTER + SIZE - 1)) || (y < START_NUMBER) || (y > START_NUMBER + SIZE - 1);
+}
+
+void addMoveOptions(std::vector<unsigned int> ids, std::vector<Piece *> pieces, MoveOptions *options, Player player, bool stopOnPiece = true)
 {
     LOOP(ids.size())
     {
@@ -27,7 +32,10 @@ void addMoveOptions(std::vector<unsigned int> ids, std::vector<Piece *> pieces, 
             {
                 options->addTake(ids[i]);
             }
-            break;
+            if (stopOnPiece) // ??
+            {
+                break;
+            }
         }
     }
 }
@@ -154,7 +162,36 @@ public:
         std::array<Field, FIELD_COUNT> board,
         std::vector<Piece *> pieces)
     {
-        std::cout << "looking for knight fields ..." << std::endl;
+        Player player = this->getPlayer();
+
+        unsigned int x = board[from].getX();
+        unsigned int y = board[from].getY();
+
+        signed int two = 2, one = 1;
+
+        std::array<std::array<unsigned int, 2>, 8>
+            // TODO: make a fn
+            moves = {
+                {{x + two, y + one},
+                 {x + two, y - one},
+                 {x - two, y + one},
+                 {x - two, y - one},
+                 {x + one, y + two},
+                 {x + one, y - two},
+                 {x - one, y + two},
+                 {x - one, y - two}}};
+
+        std::vector<unsigned int> ids;
+
+        for (std::array<unsigned int, 2> move : moves)
+        {
+
+            if (isOutsideBoard(move[0], move[1]))
+                continue;
+            unsigned int index = getFieldIndexByPosition(board, getFieldCoordinates(move[0], move[1]));
+            ids.push_back(index);
+        }
+        addMoveOptions(ids, pieces, options, player, false);
     }
 };
 

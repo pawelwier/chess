@@ -3,7 +3,6 @@
 #include <iomanip>
 
 #include "utils.hpp"
-#include "initialConfig.hpp"
 
 #define LOOP(x) for (int i = 0; i < x; i++)
 
@@ -36,7 +35,7 @@ private:
 public:
     std::string getField()
     {
-        return getChar(x_) + std::to_string(y_);
+        return getFieldCoordinates(x_, y_);
     }
 
     void setField(
