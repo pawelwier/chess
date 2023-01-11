@@ -17,9 +17,10 @@ void Pawn::getAvailableFieldIds(
     std::vector<Piece *> pieces)
 {
     Player player = this->getPlayer();
+    InitialConfig config;
 
-    unsigned int size = InitialConfig::getSize();
-    unsigned int startLetter = InitialConfig::getStartLetter();
+    unsigned int size = config.size();
+    unsigned int startLetter = config.startLetter();
 
     // Move
 

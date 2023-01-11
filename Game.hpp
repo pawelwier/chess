@@ -18,8 +18,7 @@ private:
     unsigned int move_;
 
 public:
-    // Game(std::vector<Field> board, std::vector<Piece *> pieces);
-    Game(std::vector<Piece *> pieces, unsigned int startNumber, unsigned int startLetter);
+    Game(std::vector<Piece *> pieces);
     std::vector<Field> getBoard();
     void addField(Field field);
     std::string getPieceInfo(unsigned int fieldId);
@@ -32,6 +31,5 @@ public:
     void nextMove();
     void addPiece(Piece *piece);
     void takePiece(unsigned int fieldId);
-    void printPieces();
     void printBoard();
 };

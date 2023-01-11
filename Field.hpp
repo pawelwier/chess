@@ -19,11 +19,6 @@ public:
 
     std::string getField();
 
-    // void setField(
-    //     unsigned short int x,
-    //     unsigned short int y,
-    //     unsigned short int id);
-
     unsigned short int getId();
 
     unsigned short int getX();

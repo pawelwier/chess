@@ -9,7 +9,9 @@ unsigned short int FieldUtils::getFieldIndexByPosition(std::vector<Field> &field
 {
     int index;
 
-    for (size_t i = 0; i < InitialConfig::getFieldCount(); i++)
+    InitialConfig config;
+
+    for (size_t i = 0; i < config.fieldCount(); i++)
     {
         if (fields[i].getField() == position)
         {

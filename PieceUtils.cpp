@@ -29,3 +29,8 @@ std::string PieceUtils::getPlayerColor(Player player)
 {
     return !player ? "(W.)" : "(B.)";
 }
+
+bool PieceUtils::isPlayerPiece(Piece *piece, Player player)
+{
+    return piece->getPlayer() == player;
+}

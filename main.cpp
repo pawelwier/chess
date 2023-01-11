@@ -1,9 +1,8 @@
-// #include "./pieces/PieceTypes.hpp"
 #include "Game.hpp"
 #include "Utils.hpp"
 #include "FieldUtils.hpp"
-#include "GameUtils.hpp"
 #include "PieceUtils.hpp"
+#include "InitialConfig.hpp"
 #include "Pawn.hpp"
 #include "Rook.hpp"
 #include "Knight.hpp"
@@ -17,70 +16,47 @@
 
 #define LOG(x) std::cout << x
 
-bool isPlayerPiece(Piece *piece, Player player)
-{
-    return piece->getPlayer() == player;
-}
-
 int main()
 {
     bool gameOn = true;
 
-    unsigned int startNumber = InitialConfig::getStartNumber();
-    unsigned int startLetter = InitialConfig::getStartLetter();
-
     std::vector<Piece *> pieces;
-    Game game = Game(pieces, startNumber, startLetter);
-
-    GameUtils::getInitialSetup(game, startNumber, startLetter);
-
+    Game game = Game(pieces);
     std::vector<Field> fields = game.getBoard();
-
-    // move to config class
-    const size_t pawnCount{16};
-    const size_t rookCount{4};
-    const size_t knightCount{4};
-    const size_t bishopCount{4};
-    const size_t queenCount{2};
-    const size_t kingCount{2};
-    unsigned short int pawnIds[pawnCount] = {8, 9, 10, 11, 12, 13, 14, 15, 48, 49, 50, 51, 52, 53, 54, 55};
-    unsigned short int rookIds[rookCount] = {0, 7, 56, 63};
-    unsigned short int knightIds[knightCount] = {1, 6, 57, 62};
-    unsigned short int bishopIds[bishopCount] = {2, 5, 58, 61};
-    unsigned short int queenIds[2] = {3, 59};
-    unsigned short int kingIds[2] = {4, 60};
 
     for (Field field : fields) // refactor!:)
     {
         unsigned int id = field.getId();
         Player player = FieldUtils::initPiecePlayer(id);
 
-        if (Utils::isInTypeArray(pawnIds, pawnCount, id))
+        InitialConfig config;
+
+        if (Utils::includes(config.pawnIds(), id))
         {
             game.addPiece(new Pawn(player, id));
         }
 
-        if (Utils::isInTypeArray(rookIds, rookCount, id))
+        if (Utils::includes(config.rookIds(), id))
         {
             game.addPiece(new Rook(player, id));
         }
 
-        if (Utils::isInTypeArray(knightIds, knightCount, id))
+        if (Utils::includes(config.knightIds(), id))
         {
             game.addPiece(new Knight(player, id));
         }
 
-        if (Utils::isInTypeArray(bishopIds, bishopCount, id))
+        if (Utils::includes(config.bishopIds(), id))
         {
             game.addPiece(new Bishop(player, id));
         }
 
-        if (Utils::isInTypeArray(queenIds, queenCount, id))
+        if (Utils::includes(config.queenIds(), id))
         {
             game.addPiece(new Queen(player, id));
         }
 
-        if (Utils::isInTypeArray(kingIds, kingCount, id))
+        if (Utils::includes(config.kingIds(), id))
         {
             game.addPiece(new King(player, id));
         }
@@ -118,7 +94,8 @@ int main()
             continue;
         }
 
-        if (!isPlayerPiece(p, player))
+        bool isPlayerPiece = PieceUtils::isPlayerPiece(p, player);
+        if (!isPlayerPiece)
         {
             LOG("\nNot your piece! Try again.\n\n");
             continue;

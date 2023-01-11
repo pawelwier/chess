@@ -24,6 +24,4 @@ public:
     static bool includes(std::vector<unsigned int> vector, unsigned int value);
 
     static std::vector<unsigned int> reverseVector(std::vector<unsigned int> vector);
-
-    static bool isInTypeArray(unsigned short int ids[], size_t s, unsigned short int id);
 };

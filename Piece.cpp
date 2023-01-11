@@ -15,12 +15,6 @@ Piece::Piece(Player player, PieceType type, unsigned int fieldId)
 	fieldId_ = fieldId;
 }
 
-// virtual void getAvailableFieldIds(
-//     MoveOptions *options,
-//     unsigned int from,
-//     std::vector<Field> board,
-//     std::vector<Piece *> pieces) = 0;
-
 void Piece::move(unsigned int to)
 {
 	setFieldId(to);

@@ -49,8 +49,9 @@ void Rook::getAvailableFieldIds(
             }
     }
 
-    // Utils::reverseVector(verticalDown);
-    // Utils::reverseVector(horizontalLeft);
+    // TODO: fix takes up
+    Utils::reverseVector(verticalDown);
+    Utils::reverseVector(horizontalLeft);
 
     std::array<std::vector<unsigned int>, 4> moveOptions{
         horizontalLeft,

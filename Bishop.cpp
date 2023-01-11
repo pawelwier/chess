@@ -17,5 +17,5 @@ void Bishop::getAvailableFieldIds(
     std::vector<Field> board,
     std::vector<Piece *> pieces)
 {
-    std::cout << "looking for king fields ..." << std::endl;
+    std::cout << "looking for bishop fields ..." << std::endl;
 }

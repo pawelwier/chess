@@ -9,18 +9,15 @@
 #include <cmath>
 
 #define LOOP(x) for (int i = 0; i < x; i++)
-#define LOG(x) std::cout << x
 
-// Game::Game(std::vector<Field> board, std::vector<Piece *> pieces)
-// {
-//     move_ = 1;
-//     board_ = board;
-//     currentPlayer_ = white;
-//     pieces_ = pieces;
-// }
-Game::Game(std::vector<Piece *> pieces, unsigned int startNumber, unsigned int startLetter)
+Game::Game(std::vector<Piece *> pieces)
 {
-    unsigned int size = InitialConfig::getSize();
+    InitialConfig config;
+
+    unsigned int startNumber = config.startNumber();
+    unsigned int startLetter = config.startLetter();
+    unsigned int size = config.size();
+
     int xIndex = startLetter;
     int yIndex = startNumber;
     int fieldIndex = 0;
@@ -96,14 +93,6 @@ void Game::takePiece(unsigned int fieldId)
     // TODO: add to taken pieces list in Game
 }
 
-void Game::printPieces()
-{
-    for (Piece *p : pieces_)
-    {
-        std::cout << p->getName() << std::endl; // TODO: read into
-    }
-}
-
 std::string Game::getPieceInfo(unsigned int fieldId)
 {
     Piece *piece = PieceUtils::findPieceByFieldId(pieces_, fieldId);
@@ -114,7 +103,9 @@ std::string Game::getPieceInfo(unsigned int fieldId)
 
 void Game::printBoard()
 {
-    unsigned int fieldCount = InitialConfig::getFieldCount();
+    InitialConfig config;
+
+    unsigned int fieldCount = config.fieldCount();
 
     for (size_t i = 0; i < fieldCount; i++)
     {

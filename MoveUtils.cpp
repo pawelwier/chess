@@ -22,9 +22,11 @@ bool MoveUtils::isOpponentPieceOnField(unsigned int index, std::vector<Piece *> 
 
 bool MoveUtils::isOutsideBoard(unsigned int x, unsigned int y)
 {
-    unsigned int size = InitialConfig::getSize();
-    unsigned int startNumber = InitialConfig::getStartNumber();
-    unsigned int startLetter = InitialConfig::getStartLetter();
+    InitialConfig config;
+
+    unsigned int size = config.size();
+    unsigned int startNumber = config.startNumber();
+    unsigned int startLetter = config.startLetter();
 
     return (x < startLetter) || (x > (startLetter + size - 1)) || (y < startNumber) || (y > startNumber + size - 1);
 }

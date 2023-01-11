@@ -25,6 +25,8 @@ bool Utils::isWithinValues(short unsigned int value, short unsigned int values[2
     return value >= values[0] && value <= values[1];
 }
 
+// TODO: fix generics
+
 // template <typename T>
 // bool Utils::includes(std::vector<T> vector, T value)
 // {
@@ -47,10 +49,4 @@ std::vector<unsigned int> Utils::reverseVector(std::vector<unsigned int> vector)
 {
     std::reverse(vector.begin(), vector.end());
     return vector;
-}
-
-bool Utils::isInTypeArray(unsigned short int ids[], size_t s, unsigned short int id)
-{
-    unsigned short int *end = ids + s;
-    return std::find(ids, end, id) != end;
 }

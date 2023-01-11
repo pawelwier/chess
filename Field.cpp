@@ -16,17 +16,6 @@ std::string Field::getField()
     return Utils::getFieldCoordinates(x_, y_);
 }
 
-// void Field::setField(
-//     unsigned short int x,
-//     unsigned short int y,
-//     unsigned short int id)
-// {
-//     x_ = x;
-//     y_ = y;
-//     id_ = id;
-//     isBlack_ = Utils::isOdd(x) == Utils::isOdd(y);
-// }
-
 unsigned short int Field::getId()
 {
     return id_;
