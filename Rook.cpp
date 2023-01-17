@@ -10,7 +10,7 @@
 #include <vector>
 #include <array>
 
-Rook::Rook(Player player, unsigned int fieldId) : Piece(player, rook, fieldId)
+Rook::Rook(unsigned int id, Player player, unsigned int fieldId) : Piece(id, player, rook, fieldId)
 {
 }
 
@@ -49,15 +49,11 @@ void Rook::getAvailableFieldIds(
             }
     }
 
-    // TODO: fix takes up
-    Utils::reverseVector(verticalDown);
-    Utils::reverseVector(horizontalLeft);
-
     std::array<std::vector<unsigned int>, 4> moveOptions{
-        horizontalLeft,
+        Utils::reverseVector(horizontalLeft),
         horizontalRight,
         verticalUp,
-        verticalDown};
+        Utils::reverseVector(verticalDown)};
 
     for (std::vector<unsigned int> moveSet : moveOptions)
     {

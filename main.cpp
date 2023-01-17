@@ -10,6 +10,7 @@
 #include "Queen.hpp"
 #include "King.hpp"
 #include "Player.hpp"
+#include "Move.hpp"
 
 #include <cmath>
 #include <iostream>
@@ -24,41 +25,48 @@ int main()
     Game game = Game(pieces);
     std::vector<Field> fields = game.getBoard();
 
+    unsigned int id{0};
     for (Field field : fields) // refactor!:)
     {
-        unsigned int id = field.getId();
-        Player player = FieldUtils::initPiecePlayer(id);
+        unsigned int fieldId = field.getId();
+        Player player = FieldUtils::initPiecePlayer(fieldId);
 
         InitialConfig config;
 
-        if (Utils::includes(config.pawnIds(), id))
+        if (Utils::includes(config.pawnIds(), fieldId))
         {
-            game.addPiece(new Pawn(player, id));
+            game.addPiece(new Pawn(id, player, fieldId));
+            id++;
         }
 
-        if (Utils::includes(config.rookIds(), id))
+        if (Utils::includes(config.rookIds(), fieldId))
         {
-            game.addPiece(new Rook(player, id));
+            game.addPiece(new Rook(id, player, fieldId));
+            id++;
         }
 
-        if (Utils::includes(config.knightIds(), id))
+        if (Utils::includes(config.knightIds(), fieldId))
         {
-            game.addPiece(new Knight(player, id));
+            game.addPiece(new Knight(id, player, fieldId));
+            id++;
         }
 
-        if (Utils::includes(config.bishopIds(), id))
+        if (Utils::includes(config.bishopIds(), fieldId))
         {
-            game.addPiece(new Bishop(player, id));
+            game.addPiece(new Bishop(id, player, fieldId));
+            id++;
         }
 
-        if (Utils::includes(config.queenIds(), id))
+        if (Utils::includes(config.queenIds(), fieldId))
         {
-            game.addPiece(new Queen(player, id));
+            game.addPiece(new Queen(id, player, fieldId));
+            id++;
         }
 
-        if (Utils::includes(config.kingIds(), id))
+        if (Utils::includes(config.kingIds(), fieldId))
         {
-            game.addPiece(new King(player, id));
+            game.addPiece(new King(id, player, fieldId));
+            id++;
         }
     }
 
@@ -73,7 +81,9 @@ int main()
         std::vector<Field> board = game.getBoard();
 
         LOG("Move: ");
-        LOG(game.getMove());
+
+        unsigned int moveNum = game.getMoveCount() + 1;
+        LOG(std::to_string(moveNum));
 
         LOG("\n");
 
@@ -147,6 +157,9 @@ int main()
                 game.takePiece(toIndex);
             }
             p->move(toIndex);
+
+            Move *move = new Move(moveNum, p->getId(), fromIndex, toIndex);
+            game.addMove(move);
         }
         else
         {
@@ -157,9 +170,17 @@ int main()
 
         game.printBoard();
 
+        std::vector<Move *> moveHistory = game.getMoves();
+
+        for (Move *m : moveHistory)
+        {
+            unsigned int order = m->getOrder();
+
+            game.printMove(order);
+        }
+
         delete options;
 
         game.nextPlayer();
-        game.nextMove();
     }
 }

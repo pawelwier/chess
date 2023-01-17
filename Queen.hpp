@@ -6,7 +6,7 @@
 class Queen : public Piece
 {
 public:
-    explicit Queen(Player player, unsigned int fieldId);
+    explicit Queen(unsigned int id, Player player, unsigned int fieldId);
 
     void getAvailableFieldIds(
         MoveOptions *options,

@@ -7,7 +7,7 @@
 class King : public Piece
 {
 public:
-    explicit King(Player player, unsigned int fieldId);
+    explicit King(unsigned int id, Player player, unsigned int fieldId);
 
     void getAvailableFieldIds(
         MoveOptions *options,

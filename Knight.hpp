@@ -6,7 +6,7 @@
 class Knight : public Piece
 {
 public:
-    explicit Knight(Player player, unsigned int fieldId);
+    explicit Knight(unsigned int id, Player player, unsigned int fieldId);
 
     void getAvailableFieldIds(
         MoveOptions *options,

@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-Queen::Queen(Player player, unsigned int fieldId) : Piece(player, queen, fieldId)
+Queen::Queen(unsigned int id, Player player, unsigned int fieldId) : Piece(id, player, queen, fieldId)
 {
 }
 

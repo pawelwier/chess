@@ -7,7 +7,7 @@
 #include "Piece.hpp"
 #include "Field.hpp"
 
-Knight::Knight(Player player, unsigned int fieldId) : Piece(player, PieceType::knight, fieldId)
+Knight::Knight(unsigned int id, Player player, unsigned int fieldId) : Piece(id, player, PieceType::knight, fieldId)
 {
 }
 
@@ -25,16 +25,14 @@ void Knight::getAvailableFieldIds(
     signed int two = 2, one = 1;
 
     std::array<std::array<unsigned int, 2>, 8>
-        // TODO: make a fn
-        moves = {
-            {{x + two, y + one},
-             {x + two, y - one},
-             {x - two, y + one},
-             {x - two, y - one},
-             {x + one, y + two},
-             {x + one, y - two},
-             {x - one, y + two},
-             {x - one, y - two}}};
+        moves = {{{x + two, y + one},
+                  {x + two, y - one},
+                  {x - two, y + one},
+                  {x - two, y - one},
+                  {x + one, y + two},
+                  {x + one, y - two},
+                  {x - one, y + two},
+                  {x - one, y - two}}};
 
     std::vector<unsigned int> ids;
 

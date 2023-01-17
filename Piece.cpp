@@ -8,8 +8,9 @@
 #include <algorithm>
 #include <iterator>
 
-Piece::Piece(Player player, PieceType type, unsigned int fieldId)
+Piece::Piece(unsigned int id, Player player, PieceType type, unsigned int fieldId)
 {
+	id_ = id;
 	player_ = player;
 	type_ = type;
 	fieldId_ = fieldId;
@@ -44,12 +45,17 @@ unsigned int Piece::getFieldId()
 	return fieldId_;
 }
 
+unsigned int Piece::getId()
+{
+	return id_;
+}
+
 void Piece::setFieldId(unsigned int fieldId)
 {
 	fieldId_ = fieldId;
 }
 
-unsigned int findPieceIndex(std::vector<Piece *> v, unsigned int fieldId)
+unsigned int Piece::findPieceIndex(std::vector<Piece *> v, unsigned int fieldId)
 {
 	std::vector<Piece *>::iterator result = std::find_if(v.begin(), v.end(), [fieldId](Piece *piece)
 																											 { return piece->getFieldId() == fieldId; }); // TODO: read into
@@ -57,7 +63,7 @@ unsigned int findPieceIndex(std::vector<Piece *> v, unsigned int fieldId)
 	return index;
 }
 
-Piece *findPieceByFieldId(std::vector<Piece *> v, unsigned int fieldId)
+Piece *Piece::findPieceByFieldId(std::vector<Piece *> v, unsigned int fieldId)
 {
 	unsigned int index = findPieceIndex(v, fieldId);
 	if (index == -1 || index == v.size()) // TODO: is that ok??
@@ -67,13 +73,13 @@ Piece *findPieceByFieldId(std::vector<Piece *> v, unsigned int fieldId)
 	return v[index];
 }
 
-bool isPlayersPieceOnField(Player player, std::vector<Piece *> v, unsigned int fieldId)
+bool Piece::isPlayersPieceOnField(Player player, std::vector<Piece *> v, unsigned int fieldId)
 {
 	Piece *piece = findPieceByFieldId(v, fieldId);
 	return piece->getPlayer() == player;
 }
 
-std::string getPlayerColor(Player player)
+std::string Piece::getPlayerColor(Player player)
 {
 	return !player ? "(W.)" : "(B.)";
 }

@@ -1,12 +1,13 @@
-// #include "./pieces/PieceTypes.hpp"
 #include "Game.hpp"
 #include "PieceUtils.hpp"
 #include "Player.hpp"
 #include "InitialConfig.hpp"
+#include "Move.hpp"
 
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+#include <iterator>
 
 #define LOOP(x) for (int i = 0; i < x; i++)
 
@@ -36,7 +37,6 @@ Game::Game(std::vector<Piece *> pieces)
         yIndex++;
     }
 
-    move_ = 1;
     currentPlayer_ = white;
     pieces_ = pieces;
 }
@@ -66,19 +66,9 @@ std::vector<Piece *> Game::getPieces()
     return pieces_;
 }
 
-unsigned int Game::getMove()
-{
-    return move_;
-}
-
 void Game::nextPlayer()
 {
     currentPlayer_ == white ? setPlayer(black) : setPlayer(white);
-}
-
-void Game::nextMove()
-{
-    move_++;
 }
 
 void Game::addPiece(Piece *piece)
@@ -117,4 +107,59 @@ void Game::printBoard()
             std::cout << '\n';
         }
     }
-};
+}
+
+unsigned int Game::getMoveCount()
+{
+    return moves_.size();
+}
+
+void Game::addMove(Move *move)
+{
+    moves_.push_back(move);
+}
+
+std::vector<Move *> Game::getMoves()
+{
+    return moves_;
+}
+
+Field Game::getFieldById(unsigned int id)
+{
+    return board_[id];
+}
+
+void Game::printMove(unsigned int order)
+{
+    // TODO: edit
+    std::vector<Move *> moves = this->getMoves();
+    std::vector<Move *>::iterator result = std::find_if(std::begin(moves), std::end(moves), [order](Move *move)
+                                                        { return move->getOrder() == order; });
+    ptrdiff_t index = std::distance(moves.begin(), result);
+
+    Move *move = moves_[index];
+    Field from = this->getFieldById(move->getFrom());
+    Field to = this->getFieldById(move->getTo());
+
+    unsigned int pieceId = move->getPieceId();
+    std::vector<Piece *> pieces = this->getPieces();
+    std::vector<Piece *>::iterator found = std::find_if(std::begin(pieces), std::end(pieces), [pieceId](Piece *piece)
+                                                        { return piece->getId() == pieceId; });
+    ptrdiff_t i = std::distance(pieces.begin(), found);
+
+    Piece *piece = pieces[i];
+
+    Player player = piece->getPlayer();
+
+    std::cout
+        << "Move "
+        << order
+        << ": "
+        << piece->getName()
+        << " "
+        << piece->getPlayerColor(player)
+        << " "
+        << from.getField()
+        << " -> "
+        << to.getField() << std::endl;
+}

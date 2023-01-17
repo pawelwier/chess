@@ -6,7 +6,7 @@
 class Rook : public Piece
 {
 public:
-    explicit Rook(Player player, unsigned int fieldId);
+    explicit Rook(unsigned int id, Player player, unsigned int fieldId);
 
     void getAvailableFieldIds(
         MoveOptions *options,

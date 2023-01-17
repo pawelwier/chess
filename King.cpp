@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-King::King(Player player, unsigned int fieldId) : Piece(player, PieceType::king, fieldId)
+King::King(unsigned int id, Player player, unsigned int fieldId) : Piece(id, player, PieceType::king, fieldId)
 {
 }
 

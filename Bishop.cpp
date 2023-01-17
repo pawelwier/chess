@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-Bishop::Bishop(Player player, unsigned int fieldId) : Piece(player, bishop, fieldId)
+Bishop::Bishop(unsigned int id, Player player, unsigned int fieldId) : Piece(id, player, bishop, fieldId)
 {
 }
 

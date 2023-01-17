@@ -6,7 +6,7 @@
 class Pawn : public Piece
 {
 public:
-    explicit Pawn(Player player, unsigned int fieldId);
+    explicit Pawn(unsigned int id, Player player, unsigned int fieldId);
 
     void getAvailableFieldIds(
         MoveOptions *options,

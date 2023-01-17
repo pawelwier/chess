@@ -6,7 +6,7 @@
 class Bishop : public Piece
 {
 public:
-    explicit Bishop(Player player, unsigned int fieldId);
+    explicit Bishop(unsigned int id, Player player, unsigned int fieldId);
 
     void getAvailableFieldIds(
         MoveOptions *options,
