@@ -12,69 +12,174 @@
 #include "Player.hpp"
 #include "Move.hpp"
 
+#include <SFML/Graphics.hpp>
 #include <cmath>
 #include <iostream>
 
 #define LOG(x) std::cout << x
 
+sf::RectangleShape getSquare(Field field)
+{
+    const float SQUARE_SIZE = 100.f;
+    sf::RectangleShape square;
+
+    sf::Vector2f size(SQUARE_SIZE, SQUARE_SIZE);
+    square.setSize(size);
+    square.setFillColor(field.isBlack() ? sf::Color::Black : sf::Color::White);
+
+    InitialConfig config;
+    unsigned int x = field.getX() - config.startLetter();
+    unsigned int y = field.getY();
+
+    sf::Vector2f position((x * SQUARE_SIZE), (y * SQUARE_SIZE));
+    square.setPosition(position);
+
+    return square;
+}
+
 int main()
 {
-    bool gameOn = true;
-
+    sf::RenderWindow window(sf::VideoMode(1000, 1000), "Chess game");
+    window.setFramerateLimit(20);
     std::vector<Piece *> pieces;
     Game game = Game(pieces);
     std::vector<Field> fields = game.getBoard();
 
-    unsigned int id{0};
-    for (Field field : fields) // refactor!:)
+    std::vector<sf::RectangleShape> squares;
+
+    while (window.isOpen())
     {
-        unsigned int fieldId = field.getId();
-        Player player = FieldUtils::initPiecePlayer(fieldId);
-
-        InitialConfig config;
-
-        if (Utils::includes(config.pawnIds(), fieldId))
+        sf::Event event;
+        while (window.pollEvent(event))
         {
-            game.addPiece(new Pawn(id, player, fieldId));
-            id++;
+            if (event.type == sf::Event::Closed)
+                window.close();
         }
 
-        if (Utils::includes(config.rookIds(), fieldId))
+        for (Field field : fields)
         {
-            game.addPiece(new Rook(id, player, fieldId));
-            id++;
+            squares.push_back(getSquare(field));
         }
 
-        if (Utils::includes(config.knightIds(), fieldId))
+        window.clear();
+
+        for (sf::RectangleShape square : squares)
         {
-            game.addPiece(new Knight(id, player, fieldId));
-            id++;
+            window.draw(square);
         }
 
-        if (Utils::includes(config.bishopIds(), fieldId))
-        {
-            game.addPiece(new Bishop(id, player, fieldId));
-            id++;
-        }
-
-        if (Utils::includes(config.queenIds(), fieldId))
-        {
-            game.addPiece(new Queen(id, player, fieldId));
-            id++;
-        }
-
-        if (Utils::includes(config.kingIds(), fieldId))
-        {
-            game.addPiece(new King(id, player, fieldId));
-            id++;
-        }
+        window.display();
     }
 
-    game.printBoard();
-    LOG("\n");
+    return 0;
+}
+
+/*
+int main()
+{
+    sf::RenderWindow window(sf::VideoMode(600, 600), "Chess game");
+    window.setFramerateLimit(20);
+    std::vector<Piece *> pieces;
+    Game game = Game(pieces);
+    std::vector<Field> fields = game.getBoard();
+
+    std::vector<sf::RectangleShape> squares;
+
+    // for (Field field : fields) // refactor!:)
+    // {
+    //     squares.push_back(getSquare(field));
+    // }
+
+    while (true)
+    {
+        window.clear();
+
+        // for (sf::RectangleShape square : squares)
+        // {
+        //     window.draw(square);
+        // }
+
+        window.display();
+    }
+
+    return 0;
+}
+
+
+int main()
+{
+    sf::RenderWindow window(sf::VideoMode(200, 200), "Chess game", sf::Style::Close | sf::Style::Resize);
+
+    // sf::RectangleShape shape;
+    // sf::Vector2f v1(16.5f, 24.f);
+    // shape.setSize(v1);
+    // shape.setFillColor(sf::Color::Green);
+
+    // window.draw(shape);
+
+    while (true)
+    { // DELETE
+        bool gameOn = true;
+
+        std::vector<Piece *> pieces;
+        Game game = Game(pieces);
+        std::vector<Field> fields = game.getBoard();
+
+        unsigned int id{0};
+        for (Field field : fields) // refactor!:)
+        {
+            window.draw(drawField(field));
+
+            // drawField(field);
+                unsigned int fieldId = field.getId();
+                Player player = FieldUtils::initPiecePlayer(fieldId);
+
+                InitialConfig config;
+
+                if (Utils::includes(config.pawnIds(), fieldId))
+                {
+                    game.addPiece(new Pawn(id, player, fieldId));
+                    id++;
+                }
+
+                if (Utils::includes(config.rookIds(), fieldId))
+                {
+                    game.addPiece(new Rook(id, player, fieldId));
+                    id++;
+                }
+
+                if (Utils::includes(config.knightIds(), fieldId))
+                {
+                    game.addPiece(new Knight(id, player, fieldId));
+                    id++;
+                }
+
+                if (Utils::includes(config.bishopIds(), fieldId))
+                {
+                    game.addPiece(new Bishop(id, player, fieldId));
+                    id++;
+                }
+
+                if (Utils::includes(config.queenIds(), fieldId))
+                {
+                    game.addPiece(new Queen(id, player, fieldId));
+                    id++;
+                }
+
+                if (Utils::includes(config.kingIds(), fieldId))
+                {
+                    game.addPiece(new King(id, player, fieldId));
+                    id++;
+                }
+        }
+        window.display();
+
+        // game.printBoard();
+        // LOG("\n");
 
     while (gameOn) // TODO: refactor
     {
+
         Player player = game.getCurrentPlayer();
         std::string playerColor = !player ? "White" : "Black";
 
@@ -183,4 +288,7 @@ int main()
 
         game.nextPlayer();
     }
+    }
 }
+
+*/

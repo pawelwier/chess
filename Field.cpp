@@ -35,3 +35,8 @@ std::string Field::getFieldColor()
 {
     return isBlack_ ? "(b)" : "(w)";
 }
+
+bool Field::isBlack()
+{
+    return isBlack_;
+}

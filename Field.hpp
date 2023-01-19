@@ -26,4 +26,6 @@ public:
     unsigned short int getY();
 
     std::string getFieldColor();
+
+    bool isBlack();
 };
