@@ -5,6 +5,7 @@
 
 #include <map>
 #include <vector>
+#include <array>
 #include <algorithm>
 #include <iterator>
 
@@ -33,6 +34,21 @@ std::string Piece::getName()
 			{PieceType::king, "king"}};
 
 	return pieces[type_];
+}
+
+// TODO: merge with getName()
+wchar_t Piece::getIcon()
+{
+	std::map<PieceType, std::array<wchar_t, 2>> pieces{
+			{PieceType::pawn, {0x2659, 0x265F}},
+			{PieceType::rook, {0x2656, 0x265C}},
+			{PieceType::knight, {0x2658, 0x265E}},
+			{PieceType::bishop, {0x2657, 0x265D}},
+			{PieceType::queen, {0x2655, 0x265B}},
+			{PieceType::king, {0x2654, 0x265A}}};
+
+	std::array<wchar_t, 2> pieceVariants = pieces[type_];
+	return this->getPlayer() ? pieceVariants[0] : pieceVariants[1];
 }
 
 Player Piece::getPlayer()

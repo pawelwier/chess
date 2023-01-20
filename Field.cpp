@@ -8,7 +8,7 @@ Field::Field(unsigned short int x, unsigned short int y, unsigned short int id)
     x_ = x;
     y_ = y;
     id_ = id;
-    isBlack_ = Utils::isOdd(x) == Utils::isOdd(y);
+    isBlack_ = Utils::isOdd(x) != Utils::isOdd(y);
 }
 
 std::string Field::getField()

@@ -20,21 +20,30 @@ Game::Game(std::vector<Piece *> pieces)
     unsigned int size = config.size();
 
     int xIndex = startLetter;
-    int yIndex = startNumber;
-    int fieldIndex = 0;
+    int yIndex = size;
+    int fieldIndex = config.fieldCount();
+
+    int iter = config.size();
 
     LOOP(size)
     {
         LOOP(size)
         {
-            Field field = Field(xIndex, yIndex, fieldIndex);
+            int in = fieldIndex - iter;
+
+            // std::cout << std::to_string(yIndex) << " " << std::to_string(fieldIndex) << std::endl;
+
+            Field field = Field(xIndex, yIndex, in);
             board_.push_back(field);
 
+            iter--;
             xIndex++;
-            fieldIndex++;
+            // fieldIndex--;
         }
+        fieldIndex = fieldIndex - size;
+        iter = config.size();
         xIndex = startLetter;
-        yIndex++;
+        yIndex--;
     }
 
     currentPlayer_ = white;
@@ -89,6 +98,12 @@ std::string Game::getPieceInfo(unsigned int fieldId)
     if (piece)
         return piece->getName() + " " + PieceUtils::getPlayerColor(piece->getPlayer());
     return "";
+}
+
+wchar_t Game::getPieceIcon(unsigned int fieldId)
+{
+    Piece *piece = PieceUtils::findPieceByFieldId(pieces_, fieldId);
+    return piece->getIcon();
 }
 
 void Game::printBoard()

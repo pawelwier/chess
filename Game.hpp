@@ -13,6 +13,7 @@
 class Game
 {
 private:
+    std::string icon_;
     Player currentPlayer_;
     std::vector<Field> board_;
     std::vector<Piece *> pieces_;
@@ -26,6 +27,8 @@ public:
     void addField(Field field);
 
     std::string getPieceInfo(unsigned int fieldId);
+
+    wchar_t getPieceIcon(unsigned int fieldId);
 
     Player getCurrentPlayer();
 

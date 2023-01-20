@@ -32,6 +32,8 @@ public:
 
     std::string getName();
 
+    wchar_t getIcon();
+
     Player getPlayer();
 
     unsigned int getId();

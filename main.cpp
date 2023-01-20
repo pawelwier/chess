@@ -14,18 +14,31 @@
 
 #include <SFML/Graphics.hpp>
 #include <cmath>
+#include <string>
 #include <iostream>
 
 #define LOG(x) std::cout << x
 
+const int WINDOW_WIDTH = 800;
+const int WINDOW_HEIGHT = 1200;
+const int FPS = 20;
+const float SQUARE_SIZE = 100.f;
+const int COORD_SPACE = 65;
+const int PIECE_SIZE = 90;
+const int COORD_SIZE = 25;
+const int PIECE_MARGIN = 15;
+const int COORD_MARGIN = 10;
+
+// TODO: move out of main, refactor main
 sf::RectangleShape getSquare(Field field)
 {
-    const float SQUARE_SIZE = 100.f;
     sf::RectangleShape square;
 
     sf::Vector2f size(SQUARE_SIZE, SQUARE_SIZE);
     square.setSize(size);
-    square.setFillColor(field.isBlack() ? sf::Color::Black : sf::Color::White);
+    sf::Color dark(71, 71, 71);
+    sf::Color light(171, 171, 171);
+    square.setFillColor(field.isBlack() ? dark : light);
 
     InitialConfig config;
     unsigned int x = field.getX() - config.startLetter();
@@ -39,13 +52,60 @@ sf::RectangleShape getSquare(Field field)
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(1000, 1000), "Chess game");
-    window.setFramerateLimit(20);
+    sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Chess game");
+
+    window.setFramerateLimit(FPS);
+
     std::vector<Piece *> pieces;
+    std::vector<sf::RectangleShape> squares;
+
     Game game = Game(pieces);
+    InitialConfig config;
+
     std::vector<Field> fields = game.getBoard();
 
-    std::vector<sf::RectangleShape> squares;
+    unsigned int id{0};
+    for (Field field : fields)
+    {
+        unsigned int fieldId = field.getId();
+        Player player = FieldUtils::initPiecePlayer(fieldId);
+        // TODO: refactor
+        if (Utils::includes(config.pawnIds(), fieldId))
+        {
+            game.addPiece(new Pawn(id, player, fieldId));
+            id++;
+        }
+
+        if (Utils::includes(config.rookIds(), fieldId))
+        {
+            game.addPiece(new Rook(id, player, fieldId));
+            id++;
+        }
+
+        if (Utils::includes(config.knightIds(), fieldId))
+        {
+            game.addPiece(new Knight(id, player, fieldId));
+            id++;
+        }
+
+        if (Utils::includes(config.bishopIds(), fieldId))
+        {
+            game.addPiece(new Bishop(id, player, fieldId));
+            id++;
+        }
+
+        if (Utils::includes(config.queenIds(), fieldId))
+        {
+            game.addPiece(new Queen(id, player, fieldId));
+            id++;
+        }
+
+        if (Utils::includes(config.kingIds(), fieldId))
+        {
+            game.addPiece(new King(id, player, fieldId));
+            id++;
+        }
+    }
 
     while (window.isOpen())
     {
@@ -56,16 +116,47 @@ int main()
                 window.close();
         }
 
-        for (Field field : fields)
-        {
-            squares.push_back(getSquare(field));
-        }
+        unsigned int id{0};
 
         window.clear();
 
         for (sf::RectangleShape square : squares)
         {
             window.draw(square);
+        }
+
+        for (Field field : fields)
+        {
+            squares.push_back(getSquare(field));
+
+            unsigned int fieldId = field.getId();
+
+            sf::Font font;
+            font.loadFromFile("FreeSerif.ttf");
+
+            unsigned int x = field.getX() - config.startLetter();
+            unsigned int y = config.size() - field.getY() + 1;
+
+            if (!game.getPieceInfo(fieldId).empty()) // TODO: change
+            {
+                const wchar_t icon = game.getPieceIcon(fieldId);
+                sf::Text pieceSymbol(icon, font, PIECE_SIZE);
+
+                pieceSymbol.setPosition(float(x * SQUARE_SIZE + PIECE_MARGIN), float(y * SQUARE_SIZE - PIECE_MARGIN));
+                window.draw(pieceSymbol);
+            }
+
+            char letter = Utils::getChar(field.getX());
+            sf::Text coordX(letter, font, COORD_SIZE);
+            sf::Text coordY(std::to_string(field.getY()), font, COORD_SIZE);
+
+            coordX.setPosition(float(x * SQUARE_SIZE + COORD_MARGIN), float(y * SQUARE_SIZE + COORD_SPACE));
+            coordY.setPosition(float(x * SQUARE_SIZE + COORD_MARGIN), float(y * SQUARE_SIZE + COORD_MARGIN));
+
+            if (field.getY() == 1)
+                window.draw(coordX);
+            if (field.getX() == config.startLetter())
+                window.draw(coordY);
         }
 
         window.display();
@@ -75,47 +166,9 @@ int main()
 }
 
 /*
-int main()
-{
-    sf::RenderWindow window(sf::VideoMode(600, 600), "Chess game");
-    window.setFramerateLimit(20);
-    std::vector<Piece *> pieces;
-    Game game = Game(pieces);
-    std::vector<Field> fields = game.getBoard();
-
-    std::vector<sf::RectangleShape> squares;
-
-    // for (Field field : fields) // refactor!:)
-    // {
-    //     squares.push_back(getSquare(field));
-    // }
-
-    while (true)
-    {
-        window.clear();
-
-        // for (sf::RectangleShape square : squares)
-        // {
-        //     window.draw(square);
-        // }
-
-        window.display();
-    }
-
-    return 0;
-}
-
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(200, 200), "Chess game", sf::Style::Close | sf::Style::Resize);
-
-    // sf::RectangleShape shape;
-    // sf::Vector2f v1(16.5f, 24.f);
-    // shape.setSize(v1);
-    // shape.setFillColor(sf::Color::Green);
-
-    // window.draw(shape);
 
     while (true)
     { // DELETE
