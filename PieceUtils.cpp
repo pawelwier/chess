@@ -25,12 +25,15 @@ bool PieceUtils::isPlayersPieceOnField(Player player, std::vector<Piece *> v, un
     return piece->getPlayer() == player;
 }
 
-std::string PieceUtils::getPlayerColor(Player player)
-{
-    return !player ? "(W.)" : "(B.)";
-}
-
 bool PieceUtils::isPlayerPiece(Piece *piece, Player player)
 {
     return piece->getPlayer() == player;
+}
+
+Piece *PieceUtils::findPieceByPieceId(std::vector<Piece *> pieces, unsigned int pieceId)
+{
+    std::vector<Piece *>::iterator result = std::find_if(pieces.begin(), pieces.end(), [pieceId](Piece *piece)
+                                                         { return piece->getId() == pieceId; });
+    ptrdiff_t index = std::distance(pieces.begin(), result);
+    return pieces[index];
 }

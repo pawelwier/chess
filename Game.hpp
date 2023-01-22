@@ -15,20 +15,19 @@ class Game
 private:
     std::string icon_;
     Player currentPlayer_;
-    std::vector<Field> board_;
+    std::vector<Field *> board_;
     std::vector<Piece *> pieces_;
     std::vector<Move *> moves_;
+    Piece *selectedPiece_ = nullptr;
+    std::vector<unsigned int> moveOptions_;
+    std::vector<unsigned int> takeOptions_;
 
 public:
     Game(std::vector<Piece *> pieces);
 
-    std::vector<Field> getBoard();
+    std::vector<Field *> getBoard();
 
-    void addField(Field field);
-
-    std::string getPieceInfo(unsigned int fieldId);
-
-    wchar_t getPieceIcon(unsigned int fieldId);
+    void addField(Field *field);
 
     Player getCurrentPlayer();
 
@@ -36,21 +35,31 @@ public:
 
     void setPlayer(Player newPlayer);
 
+    void setSelectedPiece(Piece *piece);
+
     void nextPlayer();
 
     void addPiece(Piece *piece);
 
     void takePiece(unsigned int fieldId);
 
-    void printBoard();
-
     unsigned int getMoveCount();
+
+    Piece *getSelectedPiece();
 
     void addMove(Move *move);
 
     std::vector<Move *> getMoves();
 
-    Field getFieldById(unsigned int id);
+    bool fieldHasPiece(unsigned int fieldId);
 
     void printMove(unsigned int moveId);
+
+    void addMoveOption(unsigned int moveOption);
+
+    std::vector<unsigned int> getMoveOptions();
+
+    void addTakeOption(unsigned int takeOption);
+
+    std::vector<unsigned int> getTakeOptions();
 };

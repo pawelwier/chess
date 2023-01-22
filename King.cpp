@@ -14,7 +14,7 @@ King::King(unsigned int id, Player player, unsigned int fieldId) : Piece(id, pla
 void King::getAvailableFieldIds(
     MoveOptions *options,
     unsigned int from,
-    std::vector<Field> board,
+    std::vector<Field *> board,
     std::vector<Piece *> pieces)
 {
     std::cout << "looking for king fields ..." << std::endl;

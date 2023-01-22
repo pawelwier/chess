@@ -14,7 +14,7 @@ Queen::Queen(unsigned int id, Player player, unsigned int fieldId) : Piece(id, p
 void Queen::getAvailableFieldIds(
     MoveOptions *options,
     unsigned int from,
-    std::vector<Field> board,
+    std::vector<Field *> board,
     std::vector<Piece *> pieces)
 {
     std::cout << "looking for queen fields ..." << std::endl;

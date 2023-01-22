@@ -17,35 +17,35 @@ Rook::Rook(unsigned int id, Player player, unsigned int fieldId) : Piece(id, pla
 void Rook::getAvailableFieldIds(
     MoveOptions *options,
     unsigned int from,
-    std::vector<Field> board,
+    std::vector<Field *> board,
     std::vector<Piece *> pieces)
 {
     Player player = this->getPlayer();
 
-    unsigned int x = board[from].getX();
-    unsigned int y = board[from].getY();
+    unsigned int x = board[from]->getX();
+    unsigned int y = board[from]->getY();
 
     std::vector<unsigned int> horizontalLeft, horizontalRight, verticalUp, verticalDown;
 
-    for (Field f : board)
+    for (Field *f : board)
     {
-        if (f.getX() == x && f.getY() != y)
-            if (f.getId() > from)
+        if (f->getX() == x && f->getY() != y)
+            if (f->getId() > from)
             {
-                verticalUp.push_back(f.getId());
+                verticalUp.push_back(f->getId());
             }
             else
             {
-                verticalDown.push_back(f.getId());
+                verticalDown.push_back(f->getId());
             }
-        if (f.getY() == y && f.getX() != x)
-            if (f.getId() > from)
+        if (f->getY() == y && f->getX() != x)
+            if (f->getId() > from)
             {
-                horizontalRight.push_back(f.getId());
+                horizontalRight.push_back(f->getId());
             }
             else
             {
-                horizontalLeft.push_back(f.getId());
+                horizontalLeft.push_back(f->getId());
             }
     }
 

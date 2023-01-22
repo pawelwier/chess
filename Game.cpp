@@ -1,5 +1,6 @@
 #include "Game.hpp"
 #include "PieceUtils.hpp"
+#include "FieldUtils.hpp"
 #include "Player.hpp"
 #include "InitialConfig.hpp"
 #include "Move.hpp"
@@ -30,15 +31,10 @@ Game::Game(std::vector<Piece *> pieces)
         LOOP(size)
         {
             int in = fieldIndex - iter;
-
-            // std::cout << std::to_string(yIndex) << " " << std::to_string(fieldIndex) << std::endl;
-
-            Field field = Field(xIndex, yIndex, in);
-            board_.push_back(field);
+            this->addField(new Field(xIndex, yIndex, in));
 
             iter--;
             xIndex++;
-            // fieldIndex--;
         }
         fieldIndex = fieldIndex - size;
         iter = config.size();
@@ -50,12 +46,12 @@ Game::Game(std::vector<Piece *> pieces)
     pieces_ = pieces;
 }
 
-std::vector<Field> Game::getBoard()
+std::vector<Field *> Game::getBoard()
 {
     return board_;
 }
 
-void Game::addField(Field field)
+void Game::addField(Field *field)
 {
     board_.push_back(field);
 }
@@ -89,39 +85,7 @@ void Game::takePiece(unsigned int fieldId)
 {
     std::erase_if(pieces_, [fieldId](Piece *p)
                   { return p->getFieldId() == fieldId; });
-    // TODO: add to taken pieces list in Game
-}
-
-std::string Game::getPieceInfo(unsigned int fieldId)
-{
-    Piece *piece = PieceUtils::findPieceByFieldId(pieces_, fieldId);
-    if (piece)
-        return piece->getName() + " " + PieceUtils::getPlayerColor(piece->getPlayer());
-    return "";
-}
-
-wchar_t Game::getPieceIcon(unsigned int fieldId)
-{
-    Piece *piece = PieceUtils::findPieceByFieldId(pieces_, fieldId);
-    return piece->getIcon();
-}
-
-void Game::printBoard()
-{
-    InitialConfig config;
-
-    unsigned int fieldCount = config.fieldCount();
-
-    for (size_t i = 0; i < fieldCount; i++)
-    {
-
-        std::cout << std::setw(6) << board_[i].getField() + board_[i].getFieldColor();
-        std::cout << std::setw(14) << getPieceInfo(i) + " | ";
-        if (!((i + 1) % (int)sqrt(fieldCount)))
-        {
-            std::cout << '\n';
-        }
-    }
+    // TODO: add to taken pieces list in Game, delete piece
 }
 
 unsigned int Game::getMoveCount()
@@ -139,22 +103,58 @@ std::vector<Move *> Game::getMoves()
     return moves_;
 }
 
-Field Game::getFieldById(unsigned int id)
+void Game::setSelectedPiece(Piece *piece)
 {
-    return board_[id];
+    selectedPiece_ = piece;
+}
+
+Piece *Game::getSelectedPiece()
+{
+    return selectedPiece_;
+}
+
+bool Game::fieldHasPiece(unsigned int fieldId)
+{
+    InitialConfig config;
+    return Utils::includes(config.pawnIds(), fieldId) ||
+           Utils::includes(config.rookIds(), fieldId) ||
+           Utils::includes(config.knightIds(), fieldId) ||
+           Utils::includes(config.bishopIds(), fieldId) ||
+           Utils::includes(config.kingIds(), fieldId) ||
+           Utils::includes(config.queenIds(), fieldId);
+}
+
+void Game::addMoveOption(unsigned int option)
+{
+    moveOptions_.push_back(option);
+}
+
+std::vector<unsigned int> Game::getMoveOptions()
+{
+    return moveOptions_;
+}
+
+void Game::addTakeOption(unsigned int option)
+{
+    takeOptions_.push_back(option);
+}
+
+std::vector<unsigned int> Game::getTakeOptions()
+{
+    return takeOptions_;
 }
 
 void Game::printMove(unsigned int order)
 {
-    // TODO: edit
+    // TODO: edit / delete?
     std::vector<Move *> moves = this->getMoves();
     std::vector<Move *>::iterator result = std::find_if(std::begin(moves), std::end(moves), [order](Move *move)
                                                         { return move->getOrder() == order; });
     ptrdiff_t index = std::distance(moves.begin(), result);
 
     Move *move = moves_[index];
-    Field from = this->getFieldById(move->getFrom());
-    Field to = this->getFieldById(move->getTo());
+    Field *from = FieldUtils::findFieldByFieldId(board_, move->getFrom());
+    Field *to = FieldUtils::findFieldByFieldId(board_, move->getTo());
 
     unsigned int pieceId = move->getPieceId();
     std::vector<Piece *> pieces = this->getPieces();
@@ -174,7 +174,7 @@ void Game::printMove(unsigned int order)
         << " "
         << piece->getPlayerColor(player)
         << " "
-        << from.getField()
+        << from->getField()
         << " -> "
-        << to.getField() << std::endl;
+        << to->getField() << std::endl;
 }

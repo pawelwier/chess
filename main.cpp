@@ -30,24 +30,140 @@ const int PIECE_MARGIN = 15;
 const int COORD_MARGIN = 10;
 
 // TODO: move out of main, refactor main
-sf::RectangleShape getSquare(Field field)
+sf::RectangleShape getSquare(Field *field)
 {
     sf::RectangleShape square;
+    InitialConfig config;
 
     sf::Vector2f size(SQUARE_SIZE, SQUARE_SIZE);
     square.setSize(size);
     sf::Color dark(71, 71, 71);
     sf::Color light(171, 171, 171);
-    square.setFillColor(field.isBlack() ? dark : light);
+    square.setFillColor(field->isBlack() ? dark : light);
 
-    InitialConfig config;
-    unsigned int x = field.getX() - config.startLetter();
-    unsigned int y = field.getY();
+    unsigned int x = field->getX() - config.startLetter();
+    unsigned int y = field->getY();
 
-    sf::Vector2f position((x * SQUARE_SIZE), (y * SQUARE_SIZE));
+    sf::Vector2f position((x * SQUARE_SIZE), (y - 1) * SQUARE_SIZE);
     square.setPosition(position);
 
     return square;
+}
+
+void handleEvents(Game *game, sf::RenderWindow *window, sf::Event event)
+{
+    InitialConfig config;
+    Player player = game->getCurrentPlayer();
+
+    unsigned int moveNum = game->getMoveCount() + 1;
+
+    switch (event.type)
+    {
+    case sf::Event::Closed:
+        window->close();
+
+        break;
+    case sf::Event::MouseButtonPressed:
+        unsigned int mouseX = event.mouseButton.x;
+        unsigned int mouseY = event.mouseButton.y;
+        if (mouseY > SQUARE_SIZE * config.size())
+            break;
+
+        int clickX = mouseX / SQUARE_SIZE + config.startLetter();
+        int clickY = config.size() - (mouseY / SQUARE_SIZE) + config.startNumber();
+
+        std::cout << Utils::getFieldCoordinates(clickX, clickY) << std::endl;
+
+        std::vector<Field *> fields = game->getBoard();
+
+        unsigned int fromIndex;
+        unsigned int toIndex;
+
+        MoveOptions *options = new MoveOptions;
+
+        std::vector<unsigned int> moves;
+        std::vector<unsigned int> takes;
+
+        if (!game->getSelectedPiece())
+        {
+            fromIndex = FieldUtils::getFieldIndexByPosition(fields, Utils::getFieldCoordinates(clickX, clickY));
+
+            Piece *p = PieceUtils::findPieceByFieldId(game->getPieces(), fromIndex);
+            if (!p)
+                break;
+
+            bool isPlayerPiece = PieceUtils::isPlayerPiece(p, player);
+            if (!isPlayerPiece)
+                break;
+
+            MoveOptions *options = new MoveOptions;
+            p->getAvailableFieldIds(options, fromIndex, fields, game->getPieces());
+
+            moves = options->getMoves();
+            takes = options->getTakes();
+
+            if (moves.size())
+            {
+                for (unsigned int move : moves)
+                {
+                    game->addMoveOption(move);
+                }
+            }
+
+            if (takes.size())
+            {
+                for (unsigned int take : takes)
+                {
+                    game->addTakeOption(take);
+                }
+            }
+            game->setSelectedPiece(p);
+        }
+        else
+        {
+            toIndex = FieldUtils::getFieldIndexByPosition(fields, Utils::getFieldCoordinates(clickX, clickY));
+
+            std::cout << std::to_string(toIndex) << std::endl;
+
+            bool takeOk = Utils::includes(game->getTakeOptions(), toIndex);
+            bool moveOk = Utils::includes(game->getMoveOptions(), toIndex);
+
+            Piece *piece = game->getSelectedPiece();
+
+            if (takeOk || moveOk)
+            {
+                if (takeOk)
+                {
+                    game->takePiece(toIndex);
+                }
+
+                piece->move(toIndex);
+
+                game->setSelectedPiece(nullptr);
+
+                game->nextPlayer();
+
+                Move *move = new Move(moveNum, piece->getId(), fromIndex, toIndex);
+                game->addMove(move);
+
+                delete options;
+            }
+            else
+            {
+                break;
+            }
+        }
+        break;
+        // case sf::Event::MouseButtonPressed:
+
+        //     break;
+        // case sf::Event::MouseButtonPressed:
+
+        //     break;
+        // case sf::Event::MouseButtonPressed:
+
+        //     break;
+    }
 }
 
 int main()
@@ -58,17 +174,24 @@ int main()
 
     std::vector<Piece *> pieces;
     std::vector<sf::RectangleShape> squares;
-
-    Game game = Game(pieces);
     InitialConfig config;
 
-    std::vector<Field> fields = game.getBoard();
+    Game game = Game(pieces);
+
+    std::vector<Field *> fields = game.getBoard();
+
+    sf::Font font;
+    font.loadFromFile("FreeSerif.ttf");
 
     unsigned int id{0};
-    for (Field field : fields)
+    for (Field *field : fields)
     {
-        unsigned int fieldId = field.getId();
+        unsigned int fieldId = field->getId();
+        if (!game.fieldHasPiece(fieldId))
+            continue;
+
         Player player = FieldUtils::initPiecePlayer(fieldId);
+
         // TODO: refactor
         if (Utils::includes(config.pawnIds(), fieldId))
         {
@@ -110,53 +233,51 @@ int main()
     while (window.isOpen())
     {
         sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-
-        unsigned int id{0};
 
         window.clear();
+
+        while (window.pollEvent(event))
+        {
+            handleEvents(&game, &window, event);
+        }
 
         for (sf::RectangleShape square : squares)
         {
             window.draw(square);
         }
 
-        for (Field field : fields)
+        for (Field *field : fields)
         {
             squares.push_back(getSquare(field));
 
-            unsigned int fieldId = field.getId();
+            unsigned int fieldId = field->getId();
 
-            sf::Font font;
-            font.loadFromFile("FreeSerif.ttf");
+            unsigned int x = field->getX() - config.startLetter();
+            unsigned int y = config.size() - field->getY() + 1;
 
-            unsigned int x = field.getX() - config.startLetter();
-            unsigned int y = config.size() - field.getY() + 1;
-
-            if (!game.getPieceInfo(fieldId).empty()) // TODO: change
-            {
-                const wchar_t icon = game.getPieceIcon(fieldId);
-                sf::Text pieceSymbol(icon, font, PIECE_SIZE);
-
-                pieceSymbol.setPosition(float(x * SQUARE_SIZE + PIECE_MARGIN), float(y * SQUARE_SIZE - PIECE_MARGIN));
-                window.draw(pieceSymbol);
-            }
-
-            char letter = Utils::getChar(field.getX());
+            char letter = Utils::getChar(field->getX());
             sf::Text coordX(letter, font, COORD_SIZE);
-            sf::Text coordY(std::to_string(field.getY()), font, COORD_SIZE);
+            sf::Text coordY(std::to_string(field->getY()), font, COORD_SIZE);
 
-            coordX.setPosition(float(x * SQUARE_SIZE + COORD_MARGIN), float(y * SQUARE_SIZE + COORD_SPACE));
-            coordY.setPosition(float(x * SQUARE_SIZE + COORD_MARGIN), float(y * SQUARE_SIZE + COORD_MARGIN));
+            coordX.setPosition(float(x * SQUARE_SIZE + COORD_MARGIN), float((y - 1) * SQUARE_SIZE + COORD_SPACE));
+            coordY.setPosition(float(x * SQUARE_SIZE + COORD_MARGIN), float((y - 1) * SQUARE_SIZE + COORD_MARGIN));
 
-            if (field.getY() == 1)
+            if (field->getY() == config.startNumber())
                 window.draw(coordX);
-            if (field.getX() == config.startLetter())
+            if (field->getX() == config.startLetter())
                 window.draw(coordY);
+        }
+        for (Piece *piece : game.getPieces())
+        {
+            Field *field = FieldUtils::findFieldByFieldId(game.getBoard(), piece->getFieldId());
+            const wchar_t icon = piece->getIcon();
+            sf::Text pieceSymbol(icon, font, PIECE_SIZE);
+
+            unsigned int x = field->getX() - config.startLetter();
+            unsigned int y = config.size() - field->getY() + 1;
+
+            pieceSymbol.setPosition(float(x * SQUARE_SIZE + PIECE_MARGIN), float((y - 1) * SQUARE_SIZE - PIECE_MARGIN));
+            window.draw(pieceSymbol);
         }
 
         window.display();
@@ -164,184 +285,3 @@ int main()
 
     return 0;
 }
-
-/*
-
-int main()
-{
-
-    while (true)
-    { // DELETE
-        bool gameOn = true;
-
-        std::vector<Piece *> pieces;
-        Game game = Game(pieces);
-        std::vector<Field> fields = game.getBoard();
-
-        unsigned int id{0};
-        for (Field field : fields) // refactor!:)
-        {
-            window.draw(drawField(field));
-
-            // drawField(field);
-                unsigned int fieldId = field.getId();
-                Player player = FieldUtils::initPiecePlayer(fieldId);
-
-                InitialConfig config;
-
-                if (Utils::includes(config.pawnIds(), fieldId))
-                {
-                    game.addPiece(new Pawn(id, player, fieldId));
-                    id++;
-                }
-
-                if (Utils::includes(config.rookIds(), fieldId))
-                {
-                    game.addPiece(new Rook(id, player, fieldId));
-                    id++;
-                }
-
-                if (Utils::includes(config.knightIds(), fieldId))
-                {
-                    game.addPiece(new Knight(id, player, fieldId));
-                    id++;
-                }
-
-                if (Utils::includes(config.bishopIds(), fieldId))
-                {
-                    game.addPiece(new Bishop(id, player, fieldId));
-                    id++;
-                }
-
-                if (Utils::includes(config.queenIds(), fieldId))
-                {
-                    game.addPiece(new Queen(id, player, fieldId));
-                    id++;
-                }
-
-                if (Utils::includes(config.kingIds(), fieldId))
-                {
-                    game.addPiece(new King(id, player, fieldId));
-                    id++;
-                }
-        }
-        window.display();
-
-        // game.printBoard();
-        // LOG("\n");
-
-    while (gameOn) // TODO: refactor
-    {
-
-        Player player = game.getCurrentPlayer();
-        std::string playerColor = !player ? "White" : "Black";
-
-        std::vector<Field> board = game.getBoard();
-
-        LOG("Move: ");
-
-        unsigned int moveNum = game.getMoveCount() + 1;
-        LOG(std::to_string(moveNum));
-
-        LOG("\n");
-
-        LOG(playerColor);
-        LOG("\'s turn. ");
-
-        std::string from, to;
-
-        LOG("Select piece: ");
-        std::cin >> from;
-        unsigned short int fromIndex = FieldUtils::getFieldIndexByPosition(fields, from);
-
-        Piece *p = PieceUtils::findPieceByFieldId(game.getPieces(), fromIndex);
-
-        if (!p)
-        {
-            LOG("\nNo piece there. Try again.\n\n");
-            continue;
-        }
-
-        bool isPlayerPiece = PieceUtils::isPlayerPiece(p, player);
-        if (!isPlayerPiece)
-        {
-            LOG("\nNot your piece! Try again.\n\n");
-            continue;
-        }
-
-        MoveOptions *options = new MoveOptions;
-        p->getAvailableFieldIds(options, fromIndex, board, game.getPieces());
-
-        std::vector<unsigned int> moves = options->getMoves();
-        std::vector<unsigned int> takes = options->getTakes();
-
-        if (moves.size())
-        {
-            LOG("Possible moves: ");
-            for (unsigned int move : moves)
-            {
-                LOG(board[move].getField() + " ");
-            }
-            LOG("\n");
-        }
-
-        if (takes.size())
-        {
-            LOG("Possible takes: ");
-            for (unsigned int take : takes)
-            {
-                LOG(board[take].getField() + " ");
-            }
-            LOG("\n");
-        }
-
-        if (!moves.size() && !takes.size())
-        {
-            LOG("No moves possible\n\n");
-            continue;
-        }
-
-        LOG("Move to: ");
-        std::cin >> to;
-        unsigned int toIndex = FieldUtils::getFieldIndexByPosition(fields, to);
-
-        bool takeOk = Utils::includes(takes, toIndex);
-        bool moveOk = Utils::includes(moves, toIndex);
-
-        if (takeOk || moveOk)
-        {
-            if (takeOk)
-            {
-                game.takePiece(toIndex);
-            }
-            p->move(toIndex);
-
-            Move *move = new Move(moveNum, p->getId(), fromIndex, toIndex);
-            game.addMove(move);
-        }
-        else
-        {
-            // TODO: leave piece selected
-            LOG("\nCan't move there\n\n");
-            continue;
-        }
-
-        game.printBoard();
-
-        std::vector<Move *> moveHistory = game.getMoves();
-
-        for (Move *m : moveHistory)
-        {
-            unsigned int order = m->getOrder();
-
-            game.printMove(order);
-        }
-
-        delete options;
-
-        game.nextPlayer();
-    }
-    }
-}
-
-*/

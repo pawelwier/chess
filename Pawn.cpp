@@ -13,7 +13,7 @@ Pawn::Pawn(unsigned int id, Player player, unsigned int fieldId) : Piece(id, pla
 void Pawn::getAvailableFieldIds(
     MoveOptions *options,
     unsigned int from,
-    std::vector<Field> board,
+    std::vector<Field *> board,
     std::vector<Piece *> pieces)
 {
     Player player = this->getPlayer();
@@ -46,7 +46,7 @@ void Pawn::getAvailableFieldIds(
 
     // TODO: add en passant
 
-    unsigned int x = board[from].getX();
+    unsigned int x = board[from]->getX();
 
     bool isBorderLeft = x == startLetter;
     bool isBorderRight = x == (startLetter + size - 1);

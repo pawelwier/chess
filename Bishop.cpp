@@ -14,7 +14,7 @@ Bishop::Bishop(unsigned int id, Player player, unsigned int fieldId) : Piece(id,
 void Bishop::getAvailableFieldIds(
     MoveOptions *options,
     unsigned int from,
-    std::vector<Field> board,
+    std::vector<Field *> board,
     std::vector<Piece *> pieces)
 {
     std::cout << "looking for bishop fields ..." << std::endl;

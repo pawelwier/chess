@@ -12,6 +12,6 @@ public:
     void getAvailableFieldIds(
         MoveOptions *options,
         unsigned int from,
-        std::vector<Field> board,
+        std::vector<Field *> board,
         std::vector<Piece *> pieces);
 };

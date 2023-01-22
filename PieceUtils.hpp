@@ -15,7 +15,7 @@ public:
 
     static bool isPlayersPieceOnField(Player player, std::vector<Piece *> v, unsigned int fieldId);
 
-    static std::string getPlayerColor(Player player);
-
     static bool isPlayerPiece(Piece *piece, Player player);
+
+    static Piece *findPieceByPieceId(std::vector<Piece *> pieces, unsigned int pieceId);
 };
