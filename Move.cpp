@@ -1,14 +1,8 @@
 #include "Move.hpp"
 #include "Field.hpp"
-// #include "Game.hpp"
 
 #include <iostream>
 #include <string>
-
-// void Move::printMove()
-// {
-//     std::cout << std::to_string(pieceId_) + " -> ..." << std::endl;
-// }
 
 unsigned int Move::getFrom()
 {

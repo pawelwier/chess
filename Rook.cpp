@@ -1,8 +1,9 @@
 #include "Rook.hpp"
 #include "Player.hpp"
 #include "PieceType.hpp"
-#include "MoveOptions.hpp"
+#include "FieldUtils.hpp"
 #include "MoveUtils.hpp"
+#include "MoveOptions.hpp"
 #include "Piece.hpp"
 #include "Field.hpp"
 #include "Utils.hpp"
@@ -22,38 +23,40 @@ void Rook::getAvailableFieldIds(
 {
     Player player = this->getPlayer();
 
-    unsigned int x = board[from]->getX();
-    unsigned int y = board[from]->getY();
+    Field *fromField = FieldUtils::findFieldByFieldId(board, from);
+    unsigned int x = fromField->getX();
+    unsigned int y = fromField->getY();
 
     std::vector<unsigned int> horizontalLeft, horizontalRight, verticalUp, verticalDown;
 
     for (Field *f : board)
     {
+        unsigned int id = f->getId();
         if (f->getX() == x && f->getY() != y)
-            if (f->getId() > from)
+            if (id > from)
             {
-                verticalUp.push_back(f->getId());
+                verticalUp.push_back(id);
             }
             else
             {
-                verticalDown.push_back(f->getId());
+                verticalDown.push_back(id);
             }
         if (f->getY() == y && f->getX() != x)
-            if (f->getId() > from)
+            if (id > from)
             {
-                horizontalRight.push_back(f->getId());
+                horizontalRight.push_back(id);
             }
             else
             {
-                horizontalLeft.push_back(f->getId());
+                horizontalLeft.push_back(id);
             }
     }
 
     std::array<std::vector<unsigned int>, 4> moveOptions{
         Utils::reverseVector(horizontalLeft),
         horizontalRight,
-        verticalUp,
-        Utils::reverseVector(verticalDown)};
+        Utils::reverseVector(verticalUp),
+        verticalDown};
 
     for (std::vector<unsigned int> moveSet : moveOptions)
     {

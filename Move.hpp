@@ -10,20 +10,21 @@ private:
     unsigned int pieceId_;
     unsigned int from_;
     unsigned int to_;
+    bool isTake_;
 
 public:
     Move(unsigned int order,
          unsigned int pieceId,
          unsigned int from,
-         unsigned int to)
+         unsigned int to,
+         bool isTake)
     {
         order_ = order;
         pieceId_ = pieceId;
         from_ = from;
         to_ = to;
+        isTake_ = isTake;
     }
-
-    // void printMove();
 
     unsigned int getFrom();
 

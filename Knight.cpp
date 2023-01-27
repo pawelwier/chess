@@ -1,8 +1,8 @@
 #include "Knight.hpp"
 #include "Player.hpp"
 #include "PieceType.hpp"
-#include "MoveUtils.hpp"
 #include "FieldUtils.hpp"
+#include "MoveUtils.hpp"
 #include "MoveOptions.hpp"
 #include "Piece.hpp"
 #include "Field.hpp"
@@ -21,8 +21,6 @@ void Knight::getAvailableFieldIds(
 
     unsigned int x = FieldUtils::findFieldByFieldId(board, from)->getX();
     unsigned int y = FieldUtils::findFieldByFieldId(board, from)->getY();
-    // unsigned int x = board[from].getX();
-    // unsigned int y = board[from].getY();
 
     signed int two = 2, one = 1;
 

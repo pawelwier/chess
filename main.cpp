@@ -3,12 +3,6 @@
 #include "FieldUtils.hpp"
 #include "PieceUtils.hpp"
 #include "InitialConfig.hpp"
-#include "Pawn.hpp"
-#include "Rook.hpp"
-#include "Knight.hpp"
-#include "Bishop.hpp"
-#include "Queen.hpp"
-#include "King.hpp"
 #include "Player.hpp"
 #include "Move.hpp"
 
@@ -16,8 +10,6 @@
 #include <cmath>
 #include <string>
 #include <iostream>
-
-#define LOG(x) std::cout << x
 
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 1200;
@@ -72,8 +64,6 @@ void handleEvents(Game *game, sf::RenderWindow *window, sf::Event event)
         int clickX = mouseX / SQUARE_SIZE + config.startLetter();
         int clickY = config.size() - (mouseY / SQUARE_SIZE) + config.startNumber();
 
-        std::cout << Utils::getFieldCoordinates(clickX, clickY) << std::endl;
-
         std::vector<Field *> fields = game->getBoard();
 
         unsigned int fromIndex;
@@ -123,8 +113,6 @@ void handleEvents(Game *game, sf::RenderWindow *window, sf::Event event)
         {
             toIndex = FieldUtils::getFieldIndexByPosition(fields, Utils::getFieldCoordinates(clickX, clickY));
 
-            std::cout << std::to_string(toIndex) << std::endl;
-
             bool takeOk = Utils::includes(game->getTakeOptions(), toIndex);
             bool moveOk = Utils::includes(game->getMoveOptions(), toIndex);
 
@@ -135,15 +123,20 @@ void handleEvents(Game *game, sf::RenderWindow *window, sf::Event event)
                 if (takeOk)
                 {
                     game->takePiece(toIndex);
+
+                    Piece *piece = PieceUtils::findPieceByFieldId(game->getPieces(), toIndex);
+                    delete piece;
                 }
 
                 piece->move(toIndex);
 
                 game->setSelectedPiece(nullptr);
 
+                game->clearOptions();
+
                 game->nextPlayer();
 
-                Move *move = new Move(moveNum, piece->getId(), fromIndex, toIndex);
+                Move *move = new Move(moveNum, piece->getId(), fromIndex, toIndex, takeOk);
                 game->addMove(move);
 
                 delete options;
@@ -154,23 +147,12 @@ void handleEvents(Game *game, sf::RenderWindow *window, sf::Event event)
             }
         }
         break;
-        // case sf::Event::MouseButtonPressed:
-
-        //     break;
-        // case sf::Event::MouseButtonPressed:
-
-        //     break;
-        // case sf::Event::MouseButtonPressed:
-
-        //     break;
     }
 }
 
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Chess game");
-
-    window.setFramerateLimit(FPS);
 
     std::vector<Piece *> pieces;
     std::vector<sf::RectangleShape> squares;
@@ -183,52 +165,7 @@ int main()
     sf::Font font;
     font.loadFromFile("FreeSerif.ttf");
 
-    unsigned int id{0};
-    for (Field *field : fields)
-    {
-        unsigned int fieldId = field->getId();
-        if (!game.fieldHasPiece(fieldId))
-            continue;
-
-        Player player = FieldUtils::initPiecePlayer(fieldId);
-
-        // TODO: refactor
-        if (Utils::includes(config.pawnIds(), fieldId))
-        {
-            game.addPiece(new Pawn(id, player, fieldId));
-            id++;
-        }
-
-        if (Utils::includes(config.rookIds(), fieldId))
-        {
-            game.addPiece(new Rook(id, player, fieldId));
-            id++;
-        }
-
-        if (Utils::includes(config.knightIds(), fieldId))
-        {
-            game.addPiece(new Knight(id, player, fieldId));
-            id++;
-        }
-
-        if (Utils::includes(config.bishopIds(), fieldId))
-        {
-            game.addPiece(new Bishop(id, player, fieldId));
-            id++;
-        }
-
-        if (Utils::includes(config.queenIds(), fieldId))
-        {
-            game.addPiece(new Queen(id, player, fieldId));
-            id++;
-        }
-
-        if (Utils::includes(config.kingIds(), fieldId))
-        {
-            game.addPiece(new King(id, player, fieldId));
-            id++;
-        }
-    }
+    game.assignInitialPieces(fields);
 
     while (window.isOpen())
     {

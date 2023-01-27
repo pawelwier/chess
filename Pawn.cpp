@@ -1,8 +1,9 @@
 #include "Pawn.hpp"
 #include "Player.hpp"
 #include "PieceType.hpp"
-#include "MoveOptions.hpp"
+#include "FieldUtils.hpp"
 #include "MoveUtils.hpp"
+#include "MoveOptions.hpp"
 #include "Piece.hpp"
 #include "Field.hpp"
 

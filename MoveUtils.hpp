@@ -1,3 +1,5 @@
+#pragma once
+
 #include "MoveOptions.hpp"
 #include "Player.hpp"
 #include "Piece.hpp"

@@ -1,4 +1,10 @@
 #include "Game.hpp"
+#include "Pawn.hpp"
+#include "Rook.hpp"
+#include "Knight.hpp"
+#include "Bishop.hpp"
+#include "Queen.hpp"
+#include "King.hpp"
 #include "PieceUtils.hpp"
 #include "FieldUtils.hpp"
 #include "Player.hpp"
@@ -139,9 +145,68 @@ void Game::addTakeOption(unsigned int option)
     takeOptions_.push_back(option);
 }
 
+void Game::clearOptions()
+{
+    moveOptions_.clear();
+    takeOptions_.clear();
+}
+
 std::vector<unsigned int> Game::getTakeOptions()
 {
     return takeOptions_;
+}
+
+void Game::assignInitialPieces(std::vector<Field *> fields)
+{
+    InitialConfig config;
+
+    unsigned int id{0};
+
+    for (Field *field : fields)
+    {
+        unsigned int fieldId = field->getId();
+        if (!this->fieldHasPiece(fieldId))
+            continue;
+
+        Player player = FieldUtils::initPiecePlayer(fieldId);
+
+        // TODO: refactor
+        if (Utils::includes(config.pawnIds(), fieldId))
+        {
+            this->addPiece(new Pawn(id, player, fieldId));
+            id++;
+        }
+
+        if (Utils::includes(config.rookIds(), fieldId))
+        {
+            this->addPiece(new Rook(id, player, fieldId));
+            id++;
+        }
+
+        if (Utils::includes(config.knightIds(), fieldId))
+        {
+            this->addPiece(new Knight(id, player, fieldId));
+            id++;
+        }
+
+        if (Utils::includes(config.bishopIds(), fieldId))
+        {
+            this->addPiece(new Bishop(id, player, fieldId));
+            id++;
+        }
+
+        if (Utils::includes(config.queenIds(), fieldId))
+        {
+            this->addPiece(new Queen(id, player, fieldId));
+            id++;
+        }
+
+        if (Utils::includes(config.kingIds(), fieldId))
+        {
+            this->addPiece(new King(id, player, fieldId));
+            id++;
+        }
+    }
 }
 
 void Game::printMove(unsigned int order)

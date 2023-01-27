@@ -18,6 +18,7 @@ private:
     std::vector<Field *> board_;
     std::vector<Piece *> pieces_;
     std::vector<Move *> moves_;
+    std::vector<Piece *> takes_;
     Piece *selectedPiece_ = nullptr;
     std::vector<unsigned int> moveOptions_;
     std::vector<unsigned int> takeOptions_;
@@ -53,6 +54,8 @@ public:
 
     bool fieldHasPiece(unsigned int fieldId);
 
+    void assignInitialPieces(std::vector<Field *> fields);
+
     void printMove(unsigned int moveId);
 
     void addMoveOption(unsigned int moveOption);
@@ -60,6 +63,8 @@ public:
     std::vector<unsigned int> getMoveOptions();
 
     void addTakeOption(unsigned int takeOption);
+
+    void clearOptions();
 
     std::vector<unsigned int> getTakeOptions();
 };
