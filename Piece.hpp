@@ -22,7 +22,7 @@ private:
 public:
     Piece(unsigned int id, Player player, PieceType type, unsigned int fieldId);
 
-    virtual void getAvailableFieldIds(
+    virtual void getAvailableMoves(
         MoveOptions *options,
         unsigned int from,
         std::vector<Field *> board,

@@ -8,7 +8,7 @@ class Pawn : public Piece
 public:
     explicit Pawn(unsigned int id, Player player, unsigned int fieldId);
 
-    void getAvailableFieldIds(
+    void getAvailableMoves(
         MoveOptions *options,
         unsigned int from,
         std::vector<Field *> board,

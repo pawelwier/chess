@@ -8,7 +8,7 @@ class Queen : public Piece
 public:
     explicit Queen(unsigned int id, Player player, unsigned int fieldId);
 
-    void getAvailableFieldIds(
+    void getAvailableMoves(
         MoveOptions *options,
         unsigned int from,
         std::vector<Field *> board,

@@ -13,7 +13,7 @@ Bishop::Bishop(unsigned int id, Player player, unsigned int fieldId) : Piece(id,
 {
 }
 
-void Bishop::getAvailableFieldIds(
+void Bishop::getAvailableMoves(
     MoveOptions *options,
     unsigned int from,
     std::vector<Field *> board,

@@ -11,7 +11,7 @@ Pawn::Pawn(unsigned int id, Player player, unsigned int fieldId) : Piece(id, pla
 {
 }
 
-void Pawn::getAvailableFieldIds(
+void Pawn::getAvailableMoves(
     MoveOptions *options,
     unsigned int from,
     std::vector<Field *> board,

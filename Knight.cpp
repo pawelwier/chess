@@ -11,7 +11,7 @@ Knight::Knight(unsigned int id, Player player, unsigned int fieldId) : Piece(id,
 {
 }
 
-void Knight::getAvailableFieldIds(
+void Knight::getAvailableMoves(
     MoveOptions *options,
     unsigned int from,
     std::vector<Field *> board,

@@ -9,7 +9,7 @@ class King : public Piece
 public:
     explicit King(unsigned int id, Player player, unsigned int fieldId);
 
-    void getAvailableFieldIds(
+    void getAvailableMoves(
         MoveOptions *options,
         unsigned int from,
         std::vector<Field *> board,

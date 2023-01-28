@@ -87,7 +87,7 @@ void handleEvents(Game *game, sf::RenderWindow *window, sf::Event event)
                 break;
 
             MoveOptions *options = new MoveOptions;
-            p->getAvailableFieldIds(options, fromIndex, fields, game->getPieces());
+            p->getAvailableMoves(options, fromIndex, fields, game->getPieces());
 
             moves = options->getMoves();
             takes = options->getTakes();
