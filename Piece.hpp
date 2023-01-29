@@ -18,9 +18,11 @@ private:
     PieceType type_;
     Player player_;
     unsigned int fieldId_;
+    unsigned int points_;
+    bool isTaken_;
 
 public:
-    Piece(unsigned int id, Player player, PieceType type, unsigned int fieldId);
+    Piece(unsigned int id, Player player, PieceType type, unsigned int fieldId, unsigned int points);
 
     virtual void getAvailableMoves(
         MoveOptions *options,
@@ -43,6 +45,12 @@ public:
     void setFieldId(unsigned int fieldId);
 
     unsigned int findPieceIndex(std::vector<Piece *> v, unsigned int fieldId);
+
+    bool getTaken();
+
+    void setTaken(bool isTaken);
+
+    unsigned int getPoints();
 
     Piece *findPieceByFieldId(std::vector<Piece *> v, unsigned int fieldId);
 

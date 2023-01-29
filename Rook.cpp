@@ -11,7 +11,7 @@
 #include <vector>
 #include <array>
 
-Rook::Rook(unsigned int id, Player player, unsigned int fieldId) : Piece(id, player, rook, fieldId)
+Rook::Rook(unsigned int id, Player player, unsigned int fieldId) : Piece(id, player, PieceType::rook, fieldId, 5)
 {
 }
 

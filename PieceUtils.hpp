@@ -18,4 +18,6 @@ public:
     static bool isPlayerPiece(Piece *piece, Player player);
 
     static Piece *findPieceByPieceId(std::vector<Piece *> pieces, unsigned int pieceId);
+
+    static unsigned int getPiecePoints(std::vector<Piece *> pieces);
 };

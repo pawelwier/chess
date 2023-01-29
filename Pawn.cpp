@@ -7,7 +7,7 @@
 #include "Piece.hpp"
 #include "Field.hpp"
 
-Pawn::Pawn(unsigned int id, Player player, unsigned int fieldId) : Piece(id, player, pawn, fieldId)
+Pawn::Pawn(unsigned int id, Player player, unsigned int fieldId) : Piece(id, player, PieceType::pawn, fieldId, 1)
 {
 }
 

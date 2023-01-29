@@ -43,7 +43,7 @@ void MoveUtils::addMoveOptions(std::vector<unsigned int> ids, std::vector<Piece 
             {
                 options->addTake(ids[i]);
             }
-            if (stopOnPiece) // ??
+            if (stopOnPiece)
             {
                 break;
             }

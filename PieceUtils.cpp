@@ -1,6 +1,9 @@
 #include "PieceUtils.hpp"
 #include "Player.hpp"
 
+#include <algorithm>
+#include <numeric>
+
 unsigned int PieceUtils::findPieceIndex(std::vector<Piece *> v, unsigned int fieldId)
 {
     std::vector<Piece *>::iterator result = std::find_if(v.begin(), v.end(), [fieldId](Piece *piece)
@@ -36,4 +39,18 @@ Piece *PieceUtils::findPieceByPieceId(std::vector<Piece *> pieces, unsigned int 
                                                          { return piece->getId() == pieceId; });
     ptrdiff_t index = std::distance(pieces.begin(), result);
     return pieces[index];
+}
+
+unsigned int PieceUtils::getPiecePoints(std::vector<Piece *> pieces)
+{
+    std::vector<unsigned int> points;
+
+    points.resize(pieces.size());
+
+    std::transform(pieces.begin(), pieces.end(), points.begin(), [](Piece *piece)
+                   { return piece->getPoints(); });
+
+    unsigned int sum = std::accumulate(points.begin(), points.end(), 0);
+
+    return sum;
 }

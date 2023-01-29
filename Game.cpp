@@ -87,11 +87,14 @@ void Game::addPiece(Piece *piece)
     pieces_.push_back(piece);
 }
 
-void Game::takePiece(unsigned int fieldId)
+void Game::takePiece(Piece *piece)
 {
-    std::erase_if(pieces_, [fieldId](Piece *p)
-                  { return p->getFieldId() == fieldId; });
-    // TODO: add to taken pieces list in Game, delete piece
+    unsigned int id = piece->getId();
+
+    std::erase_if(pieces_, [id](Piece *p)
+                  { return p->getId() == id; });
+
+    takes_.push_back(piece);
 }
 
 unsigned int Game::getMoveCount()
@@ -107,6 +110,22 @@ void Game::addMove(Move *move)
 std::vector<Move *> Game::getMoves()
 {
     return moves_;
+}
+
+std::vector<Piece *> Game::getTakes()
+{
+    return takes_;
+}
+
+std::vector<Piece *> Game::getPiecesByPlayer(Player player)
+{
+    std::vector<Piece *> to;
+    std::copy_if(pieces_.begin(),
+                 pieces_.end(),
+                 std::back_inserter(to),
+                 [player](Piece *piece)
+                 { return piece->getPlayer() == player && !piece->getTaken(); });
+    return to;
 }
 
 void Game::setSelectedPiece(Piece *piece)
@@ -154,6 +173,11 @@ void Game::clearOptions()
 std::vector<unsigned int> Game::getTakeOptions()
 {
     return takeOptions_;
+}
+
+unsigned int Game::getPlayerPoints(Player player)
+{
+    return PieceUtils::getPiecePoints(this->getPiecesByPlayer(player));
 }
 
 void Game::assignInitialPieces(std::vector<Field *> fields)

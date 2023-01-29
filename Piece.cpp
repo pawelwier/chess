@@ -9,12 +9,14 @@
 #include <algorithm>
 #include <iterator>
 
-Piece::Piece(unsigned int id, Player player, PieceType type, unsigned int fieldId)
+Piece::Piece(unsigned int id, Player player, PieceType type, unsigned int fieldId, unsigned int points)
 {
     id_ = id;
     player_ = player;
     type_ = type;
     fieldId_ = fieldId;
+    points_ = points;
+    isTaken_ = false;
 }
 
 void Piece::move(unsigned int to)
@@ -69,6 +71,21 @@ unsigned int Piece::getId()
 void Piece::setFieldId(unsigned int fieldId)
 {
     fieldId_ = fieldId;
+}
+
+bool Piece::getTaken()
+{
+    return isTaken_;
+}
+
+void Piece::setTaken(bool isTaken)
+{
+    isTaken_ = isTaken;
+}
+
+unsigned int Piece::getPoints()
+{
+    return points_;
 }
 
 unsigned int Piece::findPieceIndex(std::vector<Piece *> v, unsigned int fieldId)

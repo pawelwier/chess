@@ -42,7 +42,7 @@ public:
 
     void addPiece(Piece *piece);
 
-    void takePiece(unsigned int fieldId);
+    void takePiece(Piece *piece);
 
     unsigned int getMoveCount();
 
@@ -51,6 +51,10 @@ public:
     void addMove(Move *move);
 
     std::vector<Move *> getMoves();
+
+    std::vector<Piece *> getTakes();
+
+    std::vector<Piece *> getPiecesByPlayer(Player player);
 
     bool fieldHasPiece(unsigned int fieldId);
 
@@ -63,6 +67,8 @@ public:
     std::vector<unsigned int> getMoveOptions();
 
     void addTakeOption(unsigned int takeOption);
+
+    unsigned int getPlayerPoints(Player player);
 
     void clearOptions();
 

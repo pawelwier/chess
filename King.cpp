@@ -9,7 +9,7 @@
 
 #include <iostream>
 
-King::King(unsigned int id, Player player, unsigned int fieldId) : Piece(id, player, PieceType::king, fieldId)
+King::King(unsigned int id, Player player, unsigned int fieldId) : Piece(id, player, PieceType::king, fieldId, 0)
 {
 }
 

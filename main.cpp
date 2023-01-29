@@ -11,9 +11,12 @@
 #include <string>
 #include <iostream>
 
+// general
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 1200;
 const int FPS = 20;
+
+// board
 const float SQUARE_SIZE = 100.f;
 const int COORD_SPACE = 65;
 const int PIECE_SIZE = 90;
@@ -21,25 +24,47 @@ const int COORD_SIZE = 25;
 const int PIECE_MARGIN = 15;
 const int COORD_MARGIN = 10;
 
+// takes
+const int TAKES_TOP = 900;
+const int TAKES_HEIGHT = 200;
+const int TAKES_PIECE_SIZE = 70;
+const int TAKES_NEXT = 40;
+const int POINTS_DIFFERENCE_SIZE = 40;
+const int POINTS_DIFFERENCE_TOP = (TAKES_TOP + 2 * TAKES_PIECE_SIZE);
+
 // TODO: move out of main, refactor main
 sf::RectangleShape getSquare(Field *field)
 {
-    sf::RectangleShape square;
     InitialConfig config;
-
-    sf::Vector2f size(SQUARE_SIZE, SQUARE_SIZE);
-    square.setSize(size);
-    sf::Color dark(71, 71, 71);
-    sf::Color light(171, 171, 171);
-    square.setFillColor(field->isBlack() ? dark : light);
 
     unsigned int x = field->getX() - config.startLetter();
     unsigned int y = field->getY();
 
+    sf::RectangleShape square;
+    sf::Vector2f size(SQUARE_SIZE, SQUARE_SIZE);
+    sf::Color dark(71, 71, 71);
+    sf::Color light(171, 171, 171);
     sf::Vector2f position((x * SQUARE_SIZE), (y - 1) * SQUARE_SIZE);
+
+    square.setSize(size);
+    square.setFillColor(field->isBlack() ? dark : light);
     square.setPosition(position);
 
     return square;
+}
+
+sf::RectangleShape getTakesFrame()
+{
+    sf::RectangleShape takesFrame;
+    sf::Vector2f size(WINDOW_WIDTH, TAKES_HEIGHT);
+    sf::Color bg(171, 171, 171);
+    sf::Vector2f position(0, TAKES_TOP);
+
+    takesFrame.setSize(size);
+    takesFrame.setFillColor(bg);
+    takesFrame.setPosition(position);
+
+    return takesFrame;
 }
 
 void handleEvents(Game *game, sf::RenderWindow *window, sf::Event event)
@@ -122,10 +147,13 @@ void handleEvents(Game *game, sf::RenderWindow *window, sf::Event event)
             {
                 if (takeOk)
                 {
-                    game->takePiece(toIndex);
-
                     Piece *piece = PieceUtils::findPieceByFieldId(game->getPieces(), toIndex);
-                    delete piece;
+
+                    game->takePiece(piece);
+
+                    piece->setTaken(true);
+
+                    // delete piece; // ?? gets moved to takes frame
                 }
 
                 piece->move(toIndex);
@@ -183,6 +211,27 @@ int main()
             window.draw(square);
         }
 
+        sf::RectangleShape takesFrame = getTakesFrame();
+
+        window.draw(takesFrame);
+
+        std::vector<Piece *> takes = game.getTakes();
+        unsigned int indexWhite{0};
+        unsigned int indexBlack{0};
+        for (Piece *piece : takes)
+        {
+            wchar_t icon = piece->getIcon();
+            Player player = piece->getPlayer();
+
+            sf::Text pieceSymbol(icon, font, TAKES_PIECE_SIZE);
+            float takeX = float(player ? indexBlack : indexWhite);
+            float takeY = float(player ? TAKES_TOP : TAKES_TOP + TAKES_PIECE_SIZE);
+            pieceSymbol.setPosition(takeX, takeY);
+            player ? indexBlack += TAKES_NEXT : indexWhite += TAKES_NEXT;
+
+            window.draw(pieceSymbol);
+        }
+
         for (Field *field : fields)
         {
             squares.push_back(getSquare(field));
@@ -215,6 +264,25 @@ int main()
 
             pieceSymbol.setPosition(float(x * SQUARE_SIZE + PIECE_MARGIN), float((y - 1) * SQUARE_SIZE - PIECE_MARGIN));
             window.draw(pieceSymbol);
+        }
+
+        // move to function
+        unsigned int whitePoints = game.getPlayerPoints(Player::white);
+        unsigned int blackPoints = game.getPlayerPoints(Player::black);
+
+        int difference = whitePoints - blackPoints;
+
+        sf::Color color = difference > 0 ? sf::Color::White : sf::Color::Black;
+
+        if (difference)
+        {
+            std::string differenceText = "+" + std::to_string(abs(difference));
+            sf::Text text(differenceText, font, POINTS_DIFFERENCE_SIZE);
+
+            text.setFillColor(color);
+            text.setPosition(float(10), float(POINTS_DIFFERENCE_TOP));
+
+            window.draw(text);
         }
 
         window.display();

@@ -7,7 +7,7 @@
 #include "Piece.hpp"
 #include "Field.hpp"
 
-Knight::Knight(unsigned int id, Player player, unsigned int fieldId) : Piece(id, player, PieceType::knight, fieldId)
+Knight::Knight(unsigned int id, Player player, unsigned int fieldId) : Piece(id, player, PieceType::knight, fieldId, 3)
 {
 }
 
