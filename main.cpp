@@ -16,6 +16,7 @@ int main()
     InitialConfig config;
     UIElements ui;
 
+    std::string uiTitle = ui.title();
     unsigned int uiWidth = ui.width();
     unsigned int uiHeight = ui.height();
     unsigned int uiTakesPieceSize = ui.takesPieceSize();
@@ -30,19 +31,19 @@ int main()
     unsigned int uiPointsDifferenceSize = ui.pointsDifferenceSize();
     unsigned int uiPointsDifferenceTop = ui.pointsDifferenceTop();
 
-    sf::RenderWindow window(sf::VideoMode(uiWidth, uiHeight), "Chess game");
+    sf::RenderWindow window(sf::VideoMode(uiWidth, uiHeight), uiTitle);
 
     std::vector<Piece *> pieces;
     std::vector<sf::RectangleShape> squares;
 
-    Game game = Game(pieces);
+    Game *game = new Game(pieces);
 
-    std::vector<Field *> fields = game.getBoard();
+    std::vector<Field *> fields = game->getBoard();
 
     sf::Font font;
     font.loadFromFile("FreeSerif.ttf");
 
-    game.assignInitialPieces(fields);
+    game->assignInitialPieces(fields);
 
     while (window.isOpen())
     {
@@ -52,7 +53,7 @@ int main()
 
         while (window.pollEvent(event))
         {
-            ui.handleEvents(&game, &window, event);
+            ui.handleEvents(game, &window, event);
         }
 
         for (sf::RectangleShape square : squares)
@@ -64,7 +65,7 @@ int main()
 
         window.draw(takesFrame);
 
-        std::vector<Piece *> takes = game.getTakes();
+        std::vector<Piece *> takes = game->getTakes();
         unsigned int indexWhite{0};
         unsigned int indexBlack{0};
 
@@ -86,8 +87,6 @@ int main()
         {
             squares.push_back(ui.getSquare(field));
 
-            unsigned int fieldId = field->getId();
-
             unsigned int x = field->getX() - config.startLetter();
             unsigned int y = config.size() - field->getY() + 1;
 
@@ -104,9 +103,9 @@ int main()
                 window.draw(coordY);
         }
 
-        for (Piece *piece : game.getPieces())
+        for (Piece *piece : game->getPieces())
         {
-            Field *field = FieldUtils::findFieldByFieldId(game.getBoard(), piece->getFieldId());
+            Field *field = FieldUtils::findFieldByFieldId(game->getBoard(), piece->getFieldId());
             const wchar_t icon = piece->getIcon();
             sf::Text pieceSymbol(icon, font, uiPieceSize);
 
@@ -121,8 +120,24 @@ int main()
             window.draw(pieceSymbol);
         }
 
-        unsigned int whitePoints = game.getPlayerPoints(Player::white);
-        unsigned int blackPoints = game.getPlayerPoints(Player::black);
+        for (unsigned int fieldId : game->getMoveOptions())
+        {
+            Field *field = FieldUtils::findFieldByFieldId(game->getBoard(), fieldId);
+            sf::CircleShape c = ui.getMoveDot(field, false, uiSquareSize);
+
+            window.draw(c);
+        }
+
+        for (unsigned int fieldId : game->getTakeOptions())
+        {
+            Field *field = FieldUtils::findFieldByFieldId(game->getBoard(), fieldId);
+            sf::CircleShape c = ui.getMoveDot(field, true, uiSquareSize);
+
+            window.draw(c);
+        }
+
+        unsigned int whitePoints = game->getPlayerPoints(Player::white);
+        unsigned int blackPoints = game->getPlayerPoints(Player::black);
 
         int difference = whitePoints - blackPoints;
 

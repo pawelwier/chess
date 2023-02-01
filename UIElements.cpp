@@ -4,6 +4,11 @@
 #include "Piece.hpp"
 #include "Move.hpp"
 
+const std::string UIElements::title()
+{
+    return TITLE_;
+}
+
 const int UIElements::width()
 {
     return WINDOW_WIDTH_;
@@ -79,6 +84,26 @@ const int UIElements::pointsDifferenceTop()
     return (TAKES_TOP_ + 2 * TAKES_PIECE_SIZE_);
 }
 
+sf::CircleShape UIElements::getMoveDot(Field *field, bool isTake, unsigned int squareSize)
+{
+    InitialConfig config;
+
+    unsigned int x = field->getX() - config.startLetter();
+    unsigned int y = config.size() - field->getY() + 1;
+
+    unsigned int posX = x * squareSize + (squareSize / 3);
+    unsigned int posY = (y - 1) * squareSize + (squareSize / 3);
+
+    sf::CircleShape circle;
+    sf::Color moveBg(74, 161, 109);
+    sf::Color takeBg(168, 88, 92);
+    circle.setRadius(squareSize / 6);
+    circle.setFillColor(isTake ? takeBg : moveBg);
+    circle.setPosition(float(posX), float(posY));
+
+    return circle;
+}
+
 sf::RectangleShape UIElements::getSquare(Field *field)
 {
     InitialConfig config;
@@ -152,12 +177,17 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
             Piece *p = PieceUtils::findPieceByFieldId(game->getPieces(), fromIndex);
             if (!p)
                 break;
+            else
+            {
+                game->setSelectedPiece(nullptr);
+
+                game->clearOptions();
+            }
 
             bool isPlayerPiece = PieceUtils::isPlayerPiece(p, player);
             if (!isPlayerPiece)
                 break;
 
-            MoveOptions *options = new MoveOptions;
             p->getAvailableMoves(options, fromIndex, fields, game->getPieces());
 
             moves = options->getMoves();
@@ -213,7 +243,11 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
                 Move *move = new Move(moveNum, piece->getId(), fromIndex, toIndex, takeOk);
                 game->addMove(move);
 
+                options = nullptr;
+                move = nullptr;
+
                 delete options;
+                delete move;
             }
             else
             {

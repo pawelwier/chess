@@ -10,6 +10,7 @@ class UIElements
 {
 private:
     // general
+    const std::string TITLE_ = "Chess game";
     const int WINDOW_WIDTH_ = 800;
     const int WINDOW_HEIGHT_ = 1200;
     const int FPS_ = 20;
@@ -31,6 +32,7 @@ private:
     const int POINTS_DIFFERENCE_TOP_ = (TAKES_TOP_ + 2 * TAKES_PIECE_SIZE_);
 
 public:
+    const std::string title();
     const int width();
     const int height();
     const int fps();
@@ -48,6 +50,8 @@ public:
     const int takesNext();
     const int pointsDifferenceSize();
     const int pointsDifferenceTop();
+
+    sf::CircleShape getMoveDot(Field *field, bool isTake, unsigned int squareSize);
 
     sf::RectangleShape getSquare(Field *field);
 

@@ -43,7 +43,7 @@ void Bishop::getAvailableMoves(
         if (fieldY == y + 1)
             if (x > letter && fieldX == x - 1)
             {
-                while (id <= count)
+                while (id <= count && id % size != (size - 1))
                 {
                     upLeft.push_back(id);
                     id += (size - 1);
@@ -51,7 +51,7 @@ void Bishop::getAvailableMoves(
             }
             else if (x < (letter + size) && fieldX == x + 1)
             {
-                while (id <= count)
+                while (id <= count && id % size)
                 {
                     upRight.push_back(id);
                     id += (size + 1);
@@ -60,7 +60,7 @@ void Bishop::getAvailableMoves(
         if (fieldY == y - 1)
             if (x > letter && fieldX == x - 1)
             {
-                while (id >= 0)
+                while (id >= 0 && id % size != (size - 1))
                 {
                     downLeft.push_back(id);
                     id -= (size + 1);
@@ -68,7 +68,7 @@ void Bishop::getAvailableMoves(
             }
             else if (x < (letter + size) && fieldX == x + 1)
             {
-                while (id >= 0)
+                while (id >= 0 && id % size)
                 {
                     downRight.push_back(id);
                     id -= (size - 1);
