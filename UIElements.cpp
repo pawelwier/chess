@@ -162,33 +162,69 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
 
         std::vector<Field *> fields = game->getBoard();
 
-        unsigned int fromIndex;
-        unsigned int toIndex;
-
         MoveOptions *options = new MoveOptions;
 
         std::vector<unsigned int> moves;
         std::vector<unsigned int> takes;
 
-        if (!game->getSelectedPiece())
-        {
-            fromIndex = FieldUtils::getFieldIndexByPosition(fields, Utils::getFieldCoordinates(clickX, clickY));
+        unsigned int clickIndex = FieldUtils::getFieldIndexByPosition(fields, Utils::getFieldCoordinates(clickX, clickY));
 
-            Piece *p = PieceUtils::findPieceByFieldId(game->getPieces(), fromIndex);
-            if (!p)
-                break;
-            else
+        Piece *p = PieceUtils::findPieceByFieldId(game->getPieces(), clickIndex);
+
+        if (!p && !game->getSelectedPiece())
+            break;
+
+        bool isPlayerPiece = p && (p->getPlayer() == game->getCurrentPlayer());
+
+        if (game->getSelectedPiece() && (!p || !isPlayerPiece))
+        {
+            bool takeOk = Utils::includes(game->getTakeOptions(), clickIndex);
+            bool moveOk = Utils::includes(game->getMoveOptions(), clickIndex);
+
+            Piece *piece = game->getSelectedPiece();
+
+            if (takeOk || moveOk)
             {
+                if (takeOk)
+                {
+                    Piece *piece = PieceUtils::findPieceByFieldId(game->getPieces(), clickIndex);
+
+                    game->takePiece(piece);
+
+                    piece->setTaken(true);
+
+                    // delete piece; // ?? gets moved to takes frame
+                }
+
+                Move *move = new Move(moveNum, piece->getId(), piece->getFieldId(), clickIndex, takeOk);
+                game->addMove(move);
+
+                game->printMove(game->getMoves().size());
+
+                piece->move(clickIndex);
+
                 game->setSelectedPiece(nullptr);
 
                 game->clearOptions();
+
+                game->nextPlayer();
+
+                options = nullptr;
+                move = nullptr;
+
+                delete options;
+                delete move;
             }
-
-            bool isPlayerPiece = PieceUtils::isPlayerPiece(p, player);
-            if (!isPlayerPiece)
+            else
+            {
                 break;
+            }
+        }
+        else if (isPlayerPiece)
+        {
+            game->clearOptions();
 
-            p->getAvailableMoves(options, fromIndex, fields, game->getPieces());
+            p->getAvailableMoves(options, clickIndex, fields, game->getPieces());
 
             moves = options->getMoves();
             takes = options->getTakes();
@@ -212,48 +248,7 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
         }
         else
         {
-            toIndex = FieldUtils::getFieldIndexByPosition(fields, Utils::getFieldCoordinates(clickX, clickY));
-
-            bool takeOk = Utils::includes(game->getTakeOptions(), toIndex);
-            bool moveOk = Utils::includes(game->getMoveOptions(), toIndex);
-
-            Piece *piece = game->getSelectedPiece();
-
-            if (takeOk || moveOk)
-            {
-                if (takeOk)
-                {
-                    Piece *piece = PieceUtils::findPieceByFieldId(game->getPieces(), toIndex);
-
-                    game->takePiece(piece);
-
-                    piece->setTaken(true);
-
-                    // delete piece; // ?? gets moved to takes frame
-                }
-
-                piece->move(toIndex);
-
-                game->setSelectedPiece(nullptr);
-
-                game->clearOptions();
-
-                game->nextPlayer();
-
-                Move *move = new Move(moveNum, piece->getId(), fromIndex, toIndex, takeOk);
-                game->addMove(move);
-
-                options = nullptr;
-                move = nullptr;
-
-                delete options;
-                delete move;
-            }
-            else
-            {
-                break;
-            }
+            break;
         }
-        break;
     }
 }

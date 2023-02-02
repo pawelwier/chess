@@ -39,7 +39,7 @@ void Pawn::getAvailableMoves(
     if (isFirstMove != std::end(pawnIds))
     {
         unsigned int longMoveIndex = player ? firstIndex - size : firstIndex + size;
-        if (MoveUtils::isFieldEmpty(longMoveIndex, pieces))
+        if (MoveUtils::isFieldEmpty(firstIndex, pieces) && MoveUtils::isFieldEmpty(longMoveIndex, pieces))
             options->addMove(longMoveIndex);
     }
 
