@@ -7,6 +7,7 @@
 #include "Piece.hpp"
 #include "Field.hpp"
 #include "Utils.hpp"
+#include "Move.hpp"
 
 #include <vector>
 #include <array>
@@ -19,7 +20,8 @@ void Rook::getAvailableMoves(
     MoveOptions *options,
     unsigned int from,
     std::vector<Field *> board,
-    std::vector<Piece *> pieces)
+    std::vector<Piece *> pieces,
+    std::vector<Move *> moves)
 {
     Player player = this->getPlayer();
 

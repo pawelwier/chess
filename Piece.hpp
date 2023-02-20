@@ -2,6 +2,7 @@
 
 #include "MoveOptions.hpp"
 #include "Field.hpp"
+#include "Move.hpp"
 #include "PieceType.hpp"
 #include "Player.hpp"
 
@@ -28,7 +29,8 @@ public:
         MoveOptions *options,
         unsigned int from,
         std::vector<Field *> board,
-        std::vector<Piece *> pieces) = 0;
+        std::vector<Piece *> pieces,
+        std::vector<Move *> moves) = 0;
 
     void move(unsigned int to);
 
@@ -41,6 +43,8 @@ public:
     unsigned int getId();
 
     unsigned int getFieldId();
+
+    PieceType getType();
 
     void setFieldId(unsigned int fieldId);
 

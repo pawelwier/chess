@@ -6,6 +6,7 @@
 #include "MoveOptions.hpp"
 #include "Piece.hpp"
 #include "Field.hpp"
+#include "Move.hpp"
 
 #include <iostream>
 
@@ -17,7 +18,8 @@ void King::getAvailableMoves(
     MoveOptions *options,
     unsigned int from,
     std::vector<Field *> board,
-    std::vector<Piece *> pieces)
+    std::vector<Piece *> pieces,
+    std::vector<Move *> moveHistory)
 {
     Player player = this->getPlayer();
     std::vector<unsigned int> moves;

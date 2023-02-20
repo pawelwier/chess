@@ -63,6 +63,11 @@ unsigned int Piece::getFieldId()
     return fieldId_;
 }
 
+PieceType Piece::getType()
+{
+    return type_;
+}
+
 unsigned int Piece::getId()
 {
     return id_;

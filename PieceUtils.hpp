@@ -20,4 +20,6 @@ public:
     static Piece *findPieceByPieceId(std::vector<Piece *> pieces, unsigned int pieceId);
 
     static unsigned int getPiecePoints(std::vector<Piece *> pieces);
+
+    static bool pieceHasMoved(Piece *piece, std::vector<Move *> moves);
 };

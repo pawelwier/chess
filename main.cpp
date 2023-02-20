@@ -66,8 +66,8 @@ int main()
         window.draw(takesFrame);
 
         std::vector<Piece *> takes = game->getTakes();
-        unsigned int indexWhite{0};
-        unsigned int indexBlack{0};
+        unsigned int indexWhite{};
+        unsigned int indexBlack{};
 
         for (Piece *piece : takes)
         {

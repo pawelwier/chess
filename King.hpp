@@ -3,6 +3,7 @@
 #include "MoveOptions.hpp"
 #include "Piece.hpp"
 #include "Field.hpp"
+#include "Move.hpp"
 
 class King : public Piece
 {
@@ -13,5 +14,6 @@ public:
         MoveOptions *options,
         unsigned int from,
         std::vector<Field *> board,
-        std::vector<Piece *> pieces);
+        std::vector<Piece *> pieces,
+        std::vector<Move *> moves);
 };

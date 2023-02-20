@@ -6,6 +6,7 @@
 #include "MoveOptions.hpp"
 #include "Piece.hpp"
 #include "Field.hpp"
+#include "Move.hpp"
 
 Knight::Knight(unsigned int id, Player player, unsigned int fieldId) : Piece(id, player, PieceType::knight, fieldId, 3)
 {
@@ -15,7 +16,8 @@ void Knight::getAvailableMoves(
     MoveOptions *options,
     unsigned int from,
     std::vector<Field *> board,
-    std::vector<Piece *> pieces)
+    std::vector<Piece *> pieces,
+    std::vector<Move *> moveHistory)
 {
     Player player = this->getPlayer();
 

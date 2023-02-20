@@ -2,10 +2,12 @@
 #include "Player.hpp"
 #include "PieceType.hpp"
 #include "FieldUtils.hpp"
+#include "PieceUtils.hpp"
 #include "MoveUtils.hpp"
 #include "MoveOptions.hpp"
 #include "Piece.hpp"
 #include "Field.hpp"
+#include "Move.hpp"
 
 Pawn::Pawn(unsigned int id, Player player, unsigned int fieldId) : Piece(id, player, PieceType::pawn, fieldId, 1)
 {
@@ -15,7 +17,8 @@ void Pawn::getAvailableMoves(
     MoveOptions *options,
     unsigned int from,
     std::vector<Field *> board,
-    std::vector<Piece *> pieces)
+    std::vector<Piece *> pieces,
+    std::vector<Move *> moves)
 {
     Player player = this->getPlayer();
     InitialConfig config;
@@ -23,34 +26,43 @@ void Pawn::getAvailableMoves(
     unsigned int size = config.size();
     unsigned int startLetter = config.startLetter();
 
-    // Move
-
-    // Check if there is piece on field in front
     unsigned int firstIndex = player ? from - size : from + size;
     if (MoveUtils::isFieldEmpty(firstIndex, pieces))
         options->addMove(firstIndex);
 
-    // Check if first move
-    // TODO: add move history to Game, check if piece has been moved
-    // delete this var
-    unsigned short int pawnIds[16] = {8, 9, 10, 11, 12, 13, 14, 15, 48, 49, 50, 51, 52, 53, 54, 55};
+    bool isFirstMove = !PieceUtils::pieceHasMoved(this, moves);
 
-    unsigned short int *isFirstMove = std::find(std::begin(pawnIds), std::end(pawnIds), from);
-    if (isFirstMove != std::end(pawnIds))
+    if (isFirstMove)
     {
         unsigned int longMoveIndex = player ? firstIndex - size : firstIndex + size;
         if (MoveUtils::isFieldEmpty(firstIndex, pieces) && MoveUtils::isFieldEmpty(longMoveIndex, pieces))
             options->addMove(longMoveIndex);
     }
 
-    // Take
-
-    // TODO: add en passant
-
     unsigned int x = board[from]->getX();
 
     bool isBorderLeft = x == startLetter;
     bool isBorderRight = x == (startLetter + size - 1);
+
+    // en passant
+    if (moves.size())
+    {
+        Move *lastMove = moves[moves.size() - 1];
+
+        Piece *piece = PieceUtils::findPieceByPieceId(pieces, lastMove->getPieceId());
+        bool isPawn = piece->getType() == PieceType::pawn;
+
+        Field *toField = FieldUtils::findFieldByFieldId(board, lastMove->getTo());
+        bool toAdjacentRight = isBorderRight ? false : toField->getId() == from + 1;
+        bool toAdjacentLeft = isBorderLeft ? false : toField->getId() == from - 1;
+
+        bool addEnPassant = isPawn && (toAdjacentRight || toAdjacentLeft);
+
+        if (addEnPassant)
+        {
+            std::cout << "asd" << std::endl;
+        }
+    }
 
     unsigned int takeRight = player ? (from - size + 1) : (from + size + 1);
     unsigned int takeLeft = player ? (from - size - 1) : (from + size - 1);

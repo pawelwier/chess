@@ -54,3 +54,11 @@ unsigned int PieceUtils::getPiecePoints(std::vector<Piece *> pieces)
 
     return sum;
 }
+
+bool PieceUtils::pieceHasMoved(Piece *piece, std::vector<Move *> moves)
+{
+    unsigned int id = piece->getId();
+    std::vector<Move *>::iterator it = std::find_if(moves.begin(), moves.end(), [id](Move *move)
+                                                    { return (move->getPieceId() == id); });
+    return it != moves.end();
+}
