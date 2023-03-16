@@ -60,7 +60,10 @@ void Pawn::getAvailableMoves(
 
         if (addEnPassant)
         {
-            std::cout << "asd" << std::endl;
+            if (toAdjacentRight)
+                options->addTake(player ? from + 1 - size : from + 1 + size);
+            if (toAdjacentLeft)
+                options->addTake(player ? from - 1 - size : from - 1 + size);
         }
     }
 

@@ -144,6 +144,7 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
     Player player = game->getCurrentPlayer();
 
     unsigned int moveNum = game->getMoveCount() + 1;
+    unsigned short int size = config.size();
 
     switch (event.type)
     {
@@ -154,7 +155,7 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
     case sf::Event::MouseButtonPressed:
         unsigned int mouseX = event.mouseButton.x;
         unsigned int mouseY = event.mouseButton.y;
-        if (mouseY > SQUARE_SIZE_ * config.size())
+        if (mouseY > SQUARE_SIZE_ * size)
             break;
 
         int clickX = mouseX / SQUARE_SIZE_ + config.startLetter();
@@ -189,14 +190,46 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
                 {
                     Piece *piece = PieceUtils::findPieceByFieldId(game->getPieces(), clickIndex);
 
-                    game->takePiece(piece);
+                    // en passant (some better way?)
+                    if (!piece)
+                    {
+                        int indexPassed = player ? clickIndex + size : clickIndex - size;
+                        Piece *piecePassed = PieceUtils::findPieceByFieldId(game->getPieces(), indexPassed);
 
-                    piece->setTaken(true);
+                        game->takePiece(piecePassed);
+                        piecePassed->setTaken(true);
+                    }
+                    else
+                    {
+                        game->takePiece(piece);
+                        piece->setTaken(true);
+                    }
 
                     // delete piece; // ?? gets moved to takes frame
                 }
 
-                Move *move = new Move(moveNum, piece->getId(), piece->getFieldId(), clickIndex, takeOk);
+                int from = piece->getFieldId();
+                int indexDiff = from - clickIndex;
+
+                // castle king/queen side
+                if (piece->getType() == PieceType::king && std::abs(indexDiff) == 2)
+                {
+                    int rookIndex, rookDestination;
+                    if (from < clickIndex)
+                    {
+                        rookIndex = 3;
+                        rookDestination = 1;
+                    }
+                    else
+                    {
+                        rookIndex = -4;
+                        rookDestination = -1;
+                    }
+                    Piece *rook = PieceUtils::findPieceByFieldId(game->getPieces(), from + rookIndex);
+                    rook->move(from + rookDestination);
+                }
+
+                Move *move = new Move(moveNum, piece->getId(), from, clickIndex, takeOk);
                 game->addMove(move);
 
                 game->printMove(game->getMoves().size());
