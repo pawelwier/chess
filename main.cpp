@@ -1,5 +1,5 @@
 #include "Game.hpp"
-#include "Utils.hpp"
+#include "./utils/Utils.hpp"
 #include "InitialConfig.hpp"
 #include "Player.hpp"
 #include "Move.hpp"
@@ -33,6 +33,10 @@ int main()
     unsigned int uiPointsDifferenceTop = ui.pointsDifferenceTop();
 
     sf::RenderWindow window(sf::VideoMode(uiWidth, uiHeight), uiTitle);
+
+    sf::View view;
+    view.reset(sf::FloatRect(0, 0, uiWidth, uiHeight));
+    window.setView(view);
 
     std::vector<Piece *> pieces;
     std::vector<sf::RectangleShape> squares;

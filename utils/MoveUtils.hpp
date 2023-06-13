@@ -1,8 +1,9 @@
-#pragma once
+#ifndef MOVE_UTILS_H
+#define MOVE_UTILS_H
 
-#include "MoveOptions.hpp"
-#include "Player.hpp"
-#include "Piece.hpp"
+#include "../MoveOptions.hpp"
+#include "../Player.hpp"
+#include "../Piece.hpp"
 
 #include <vector>
 
@@ -17,3 +18,5 @@ public:
 
     static void addMoveOptions(std::vector<unsigned int> ids, std::vector<Piece *> pieces, MoveOptions *options, Player player, bool stopOnPiece = true);
 };
+
+#endif

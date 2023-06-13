@@ -150,8 +150,8 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
     {
     case sf::Event::Closed:
         window->close();
-
         break;
+
     case sf::Event::MouseButtonPressed:
         unsigned int mouseX = event.mouseButton.x;
         unsigned int mouseY = event.mouseButton.y;

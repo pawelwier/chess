@@ -1,4 +1,5 @@
-#pragma once
+#ifndef UTILS_H
+#define UTILS_H
 
 #include <algorithm>
 #include <string>
@@ -25,3 +26,5 @@ public:
 
     static std::vector<unsigned int> reverseVector(std::vector<unsigned int> vector);
 };
+
+#endif

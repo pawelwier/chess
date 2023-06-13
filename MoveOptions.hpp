@@ -1,5 +1,6 @@
 
-#pragma once
+#ifndef MOVE_OPTIONS_H
+#define MOVE_OPTIONS_H
 
 #include <vector>
 
@@ -15,3 +16,5 @@ public:
     void addMove(unsigned int move);
     void addTake(unsigned int take);
 };
+
+#endif

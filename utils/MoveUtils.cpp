@@ -1,7 +1,7 @@
 #include "MoveUtils.hpp"
 #include "PieceUtils.hpp"
-#include "Player.hpp"
-#include "InitialConfig.hpp"
+#include "../Player.hpp"
+#include "../InitialConfig.hpp"
 
 #include <vector>
 

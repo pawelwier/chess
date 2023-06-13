@@ -1,6 +1,7 @@
-#pragma once
+#ifndef FIELD_H
+#define FIELD_H
 
-#include "Utils.hpp"
+#include "./utils/Utils.hpp"
 #include "InitialConfig.hpp"
 
 #include <string>
@@ -29,3 +30,5 @@ public:
 
     bool isBlack();
 };
+
+#endif

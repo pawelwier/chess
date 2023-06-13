@@ -1,5 +1,5 @@
 #include "Field.hpp"
-#include "Utils.hpp"
+#include "./utils/Utils.hpp"
 
 #define LOOP(x) for (int i = 0; i < x; i++)
 

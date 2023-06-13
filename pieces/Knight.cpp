@@ -1,12 +1,12 @@
 #include "Knight.hpp"
-#include "Player.hpp"
-#include "PieceType.hpp"
-#include "FieldUtils.hpp"
-#include "MoveUtils.hpp"
-#include "MoveOptions.hpp"
-#include "Piece.hpp"
-#include "Field.hpp"
-#include "Move.hpp"
+#include "../Player.hpp"
+#include "../PieceType.hpp"
+#include "../utils/FieldUtils.hpp"
+#include "../utils/MoveUtils.hpp"
+#include "../MoveOptions.hpp"
+#include "../Piece.hpp"
+#include "../Field.hpp"
+#include "../Move.hpp"
 
 Knight::Knight(unsigned int id, Player player, unsigned int fieldId) : Piece(id, player, PieceType::knight, fieldId, 3)
 {

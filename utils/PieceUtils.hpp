@@ -1,7 +1,8 @@
-#pragma once
+#ifndef PIECE_UTILS_H
+#define PIECE_UTILS_H
 
-#include "Piece.hpp"
-#include "Player.hpp"
+#include "../Piece.hpp"
+#include "../Player.hpp"
 
 #include <string>
 #include <vector>
@@ -23,3 +24,5 @@ public:
 
     static bool pieceHasMoved(Piece *piece, std::vector<Move *> moves);
 };
+
+#endif

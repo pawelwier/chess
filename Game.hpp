@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GAME_H
+#define GAME_H
 
 #include "Piece.hpp"
 #include "Field.hpp"
@@ -74,3 +75,5 @@ public:
 
     std::vector<unsigned int> getTakeOptions();
 };
+
+#endif

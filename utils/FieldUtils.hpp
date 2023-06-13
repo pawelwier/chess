@@ -1,6 +1,6 @@
-#include "Field.hpp"
-#include "Player.hpp"
-#include "Game.hpp"
+#include "../Field.hpp"
+#include "../Player.hpp"
+#include "../Game.hpp"
 
 class FieldUtils
 {

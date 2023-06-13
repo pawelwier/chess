@@ -1,4 +1,5 @@
-#pragma once
+#ifndef INITIAL_CONFIG_H
+#define INITIAL_CONFIG_H
 
 #include <vector>
 
@@ -39,3 +40,5 @@ public:
 
     std::vector<unsigned int> kingIds();
 };
+
+#endif

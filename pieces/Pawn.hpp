@@ -1,8 +1,8 @@
-#include "Player.hpp"
-#include "Piece.hpp"
-#include "MoveOptions.hpp"
-#include "Field.hpp"
-#include "Move.hpp"
+#include "../Player.hpp"
+#include "../Piece.hpp"
+#include "../MoveOptions.hpp"
+#include "../Field.hpp"
+#include "../Move.hpp"
 
 class Pawn : public Piece
 {

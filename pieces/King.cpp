@@ -1,13 +1,13 @@
 #include "King.hpp"
-#include "Player.hpp"
-#include "PieceType.hpp"
-#include "FieldUtils.hpp"
-#include "MoveUtils.hpp"
-#include "PieceUtils.hpp"
-#include "MoveOptions.hpp"
-#include "Piece.hpp"
-#include "Field.hpp"
-#include "Move.hpp"
+#include "../Player.hpp"
+#include "../PieceType.hpp"
+#include "../utils/FieldUtils.hpp"
+#include "../utils/MoveUtils.hpp"
+#include "../utils/PieceUtils.hpp"
+#include "../MoveOptions.hpp"
+#include "../Piece.hpp"
+#include "../Field.hpp"
+#include "../Move.hpp"
 
 #include <iostream>
 

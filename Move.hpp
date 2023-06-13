@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MOVE_H
+#define MOVE_H
 
 #include <string>
 #include <iostream>
@@ -34,3 +35,5 @@ public:
 
     unsigned int getPieceId();
 };
+
+#endif

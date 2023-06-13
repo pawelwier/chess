@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PIECE_H
+#define PIECE_H
 
 #include "MoveOptions.hpp"
 #include "Field.hpp"
@@ -62,3 +63,5 @@ public:
 
     std::string getPlayerColor(Player player);
 };
+
+#endif

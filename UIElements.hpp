@@ -1,7 +1,7 @@
 #include "Field.hpp"
 #include "Game.hpp"
-#include "FieldUtils.hpp"
-#include "PieceUtils.hpp"
+#include "./utils/FieldUtils.hpp"
+#include "./utils/PieceUtils.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <cmath>

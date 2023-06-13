@@ -1,6 +1,6 @@
 #include "FieldUtils.hpp"
-#include "Player.hpp"
-#include "Field.hpp"
+#include "../Player.hpp"
+#include "../Field.hpp"
 
 #include <iostream>
 #include <vector>

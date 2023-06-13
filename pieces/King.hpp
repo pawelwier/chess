@@ -1,9 +1,8 @@
-
-#include "Player.hpp"
-#include "MoveOptions.hpp"
-#include "Piece.hpp"
-#include "Field.hpp"
-#include "Move.hpp"
+#include "../Player.hpp"
+#include "../MoveOptions.hpp"
+#include "../Piece.hpp"
+#include "../Field.hpp"
+#include "../Move.hpp"
 
 class King : public Piece
 {
