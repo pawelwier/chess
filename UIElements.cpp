@@ -4,85 +4,26 @@
 #include "Piece.hpp"
 #include "Move.hpp"
 
-const std::string UIElements::title()
+UIElements::UIElements()
 {
-    return TITLE_;
+    title = "Chess game";
+    width = 800;
+    height = 1200;
+    fps = 20;
+    squareSize = 100.f;
+    coordSpace = 65;
+    pieceSize = 90;
+    coordSize = 25;
+    pieceMargin = 15;
+    coordMargin = 10;
+    takesTop = 900;
+    takesHeight = 200;
+    takesPieceSize = 70;
+    takesNext = 40;
+    pointsDifferenceSize = 40;
+    pointsDifferenceTop = this->takesTop + 2 * this->takesPieceSize;
 }
 
-const int UIElements::width()
-{
-    return WINDOW_WIDTH_;
-}
-
-const int UIElements::height()
-{
-    return WINDOW_HEIGHT_;
-}
-
-const int UIElements::fps()
-{
-    return FPS_;
-}
-
-const float UIElements::squareSize()
-{
-    return SQUARE_SIZE_;
-}
-
-const int UIElements::coordSpace()
-{
-    return COORD_SPACE_;
-}
-
-const int UIElements::pieceSize()
-{
-    return PIECE_SIZE_;
-}
-
-const int UIElements::coordSize()
-{
-    return COORD_SIZE_;
-}
-
-const int UIElements::pieceMargin()
-{
-    return PIECE_MARGIN_;
-}
-
-const int UIElements::coordMargin()
-{
-    return COORD_MARGIN_;
-}
-
-const int UIElements::takesTop()
-{
-    return TAKES_TOP_;
-}
-
-const int UIElements::takesHeight()
-{
-    return TAKES_HEIGHT_;
-}
-
-const int UIElements::takesPieceSize()
-{
-    return TAKES_PIECE_SIZE_;
-}
-
-const int UIElements::takesNext()
-{
-    return TAKES_NEXT_;
-}
-
-const int UIElements::pointsDifferenceSize()
-{
-    return POINTS_DIFFERENCE_SIZE_;
-}
-
-const int UIElements::pointsDifferenceTop()
-{
-    return (TAKES_TOP_ + 2 * TAKES_PIECE_SIZE_);
-}
 
 sf::CircleShape UIElements::getMoveDot(Field *field, bool isTake, unsigned int squareSize)
 {
@@ -112,10 +53,10 @@ sf::RectangleShape UIElements::getSquare(Field *field)
     unsigned int y = field->getY();
 
     sf::RectangleShape square;
-    sf::Vector2f size(SQUARE_SIZE_, SQUARE_SIZE_);
+    sf::Vector2f size(squareSize, squareSize);
     sf::Color dark(71, 71, 71);
     sf::Color light(171, 171, 171);
-    sf::Vector2f position((x * SQUARE_SIZE_), (y - 1) * SQUARE_SIZE_);
+    sf::Vector2f position((x * squareSize), (y - 1) * squareSize);
 
     square.setSize(size);
     square.setFillColor(field->isBlack() ? dark : light);
@@ -127,9 +68,9 @@ sf::RectangleShape UIElements::getSquare(Field *field)
 sf::RectangleShape UIElements::getTakesFrame()
 {
     sf::RectangleShape takesFrame;
-    sf::Vector2f size(WINDOW_WIDTH_, TAKES_HEIGHT_);
+    sf::Vector2f size(width, takesHeight);
     sf::Color bg(171, 171, 171);
-    sf::Vector2f position(0, TAKES_TOP_);
+    sf::Vector2f position(0, takesTop);
 
     takesFrame.setSize(size);
     takesFrame.setFillColor(bg);
@@ -155,11 +96,11 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
     case sf::Event::MouseButtonPressed:
         unsigned int mouseX = event.mouseButton.x;
         unsigned int mouseY = event.mouseButton.y;
-        if (mouseY > SQUARE_SIZE_ * size)
+        if (mouseY > squareSize * size)
             break;
 
-        int clickX = mouseX / SQUARE_SIZE_ + config.startLetter();
-        int clickY = config.size() - (mouseY / SQUARE_SIZE_) + config.startNumber();
+        int clickX = mouseX / squareSize + config.startLetter();
+        int clickY = config.size() - (mouseY / squareSize) + config.startNumber();
 
         std::vector<Field *> fields = game->getBoard();
 

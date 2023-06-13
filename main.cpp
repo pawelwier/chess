@@ -15,28 +15,26 @@ int main()
 {
     InitialConfig config;
     UIElements ui;
+    auto [
+        title,
+        width,
+        height,
+        fps,
+        squareSize,
+        coordSpace,
+        pieceSize,
+        coordSize,
+        pieceMargin,
+        coordMargin,
+        takesTop,
+        takesHeight,
+        takesPieceSize,
+        takesNext,
+        pointsDifferenceSize,
+        pointsDifferenceTop
+    ] = ui;
 
-    // ??
-    std::string uiTitle = ui.title();
-    unsigned int uiWidth = ui.width();
-    unsigned int uiHeight = ui.height();
-    unsigned int uiTakesPieceSize = ui.takesPieceSize();
-    unsigned int uiTakesTop = ui.takesTop();
-    unsigned int uiTakesNext = ui.takesNext();
-    unsigned int uiCoordMargin = ui.coordMargin();
-    unsigned int uiCoordSize = ui.coordSize();
-    unsigned int uiCoordSpace = ui.coordSpace();
-    unsigned int uiPieceSize = ui.pieceSize();
-    unsigned int uiPieceMargin = ui.pieceMargin();
-    unsigned int uiSquareSize = ui.squareSize();
-    unsigned int uiPointsDifferenceSize = ui.pointsDifferenceSize();
-    unsigned int uiPointsDifferenceTop = ui.pointsDifferenceTop();
-
-    sf::RenderWindow window(sf::VideoMode(uiWidth, uiHeight), uiTitle);
-
-    sf::View view;
-    view.reset(sf::FloatRect(0, 0, uiWidth, uiHeight));
-    window.setView(view);
+    sf::RenderWindow window(sf::VideoMode(width, height), title);
 
     std::vector<Piece *> pieces;
     std::vector<sf::RectangleShape> squares;
@@ -79,11 +77,11 @@ int main()
             wchar_t icon = piece->getIcon();
             Player player = piece->getPlayer();
 
-            sf::Text pieceSymbol(icon, font, uiTakesPieceSize);
+            sf::Text pieceSymbol(icon, font, takesPieceSize);
             float takeX = float(player ? indexBlack : indexWhite);
-            float takeY = float(player ? uiTakesTop : uiTakesTop + uiTakesPieceSize);
+            float takeY = float(player ? takesTop : takesTop + takesPieceSize);
             pieceSymbol.setPosition(takeX, takeY);
-            player ? indexBlack += uiTakesNext : indexWhite += uiTakesNext;
+            player ? indexBlack += takesNext : indexWhite += takesNext;
 
             window.draw(pieceSymbol);
         }
@@ -96,11 +94,11 @@ int main()
             unsigned int y = config.size() - field->getY() + 1;
 
             char letter = Utils::getChar(field->getX());
-            sf::Text coordX(letter, font, uiCoordSize);
-            sf::Text coordY(std::to_string(field->getY()), font, uiCoordSize);
+            sf::Text coordX(letter, font, coordSize);
+            sf::Text coordY(std::to_string(field->getY()), font, coordSize);
 
-            coordX.setPosition(float(x * uiSquareSize + uiCoordMargin), float((y - 1) * uiSquareSize + uiCoordSpace));
-            coordY.setPosition(float(x * uiSquareSize + uiCoordMargin), float((y - 1) * uiSquareSize + uiCoordMargin));
+            coordX.setPosition(float(x * squareSize + coordMargin), float((y - 1) * squareSize + coordSpace));
+            coordY.setPosition(float(x * squareSize + coordMargin), float((y - 1) * squareSize + coordMargin));
 
             if (field->getY() == config.startNumber())
                 window.draw(coordX);
@@ -112,13 +110,13 @@ int main()
         {
             Field *field = FieldUtils::findFieldByFieldId(game->getBoard(), piece->getFieldId());
             const wchar_t icon = piece->getIcon();
-            sf::Text pieceSymbol(icon, font, uiPieceSize);
+            sf::Text pieceSymbol(icon, font, pieceSize);
 
             unsigned int x = field->getX() - config.startLetter();
             unsigned int y = config.size() - field->getY() + 1;
 
-            unsigned int posX = x * uiSquareSize + uiPieceMargin;
-            signed int posY = (y - 1) * uiSquareSize - uiPieceMargin;
+            unsigned int posX = x * squareSize + pieceMargin;
+            signed int posY = (y - 1) * squareSize - pieceMargin;
 
             pieceSymbol.setPosition(float(posX), float(posY));
 
@@ -128,7 +126,7 @@ int main()
         for (unsigned int fieldId : game->getMoveOptions())
         {
             Field *field = FieldUtils::findFieldByFieldId(game->getBoard(), fieldId);
-            sf::CircleShape c = ui.getMoveDot(field, false, uiSquareSize);
+            sf::CircleShape c = ui.getMoveDot(field, false, squareSize);
 
             window.draw(c);
         }
@@ -136,7 +134,7 @@ int main()
         for (unsigned int fieldId : game->getTakeOptions())
         {
             Field *field = FieldUtils::findFieldByFieldId(game->getBoard(), fieldId);
-            sf::CircleShape c = ui.getMoveDot(field, true, uiSquareSize);
+            sf::CircleShape c = ui.getMoveDot(field, true, squareSize);
 
             window.draw(c);
         }
@@ -150,9 +148,9 @@ int main()
 
         std::string differenceText = difference ? "+" + std::to_string(abs(difference)) : "";
 
-        sf::Text text(differenceText, font, uiPointsDifferenceSize);
+        sf::Text text(differenceText, font, pointsDifferenceSize);
         text.setFillColor(color);
-        text.setPosition(float(uiPieceMargin), float(uiPointsDifferenceTop));
+        text.setPosition(float(pieceMargin), float(pointsDifferenceTop));
 
         window.draw(text);
 
