@@ -266,3 +266,43 @@ void Game::printMove(unsigned int order)
         << " -> "
         << to->getField() << std::endl;
 }
+
+unsigned int Game::getKingFieldId(Player player)
+{
+    std::vector<Piece *> pieces = this->getPiecesByPlayer(player);
+    std::vector<Piece *>::iterator result = std::find_if(pieces.begin(), pieces.end(), [](Piece *piece) 
+        {return piece->getType() == PieceType::king;});
+
+    ptrdiff_t index = std::distance(pieces.begin(), result);
+
+    return pieces[index]->getFieldId();
+}
+
+void Game::getChecks()
+{
+    Player current = this->getCurrentPlayer();
+    Player opponent = current == Player::black ? Player::white : Player::black;
+
+    MoveOptions *options = new MoveOptions;
+
+    std::vector<Piece *> opponentPieces = getPiecesByPlayer(opponent);
+
+    for (Piece* piece : opponentPieces)
+    {
+        piece->getAvailableMoves(
+            this->config(), 
+            options,
+            this->getBoard(),
+            this->getPieces(),
+            this->getMoves(),
+            opponent);
+    }
+
+    unsigned int kingIndex = this->getKingFieldId(current);
+
+    if (Utils::includes(options->getTakes(), kingIndex))
+    {
+        std::cout << "king in danger!" << std::endl;
+    }
+
+}

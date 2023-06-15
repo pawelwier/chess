@@ -16,13 +16,12 @@ Pawn::Pawn(unsigned int id, Player player, unsigned int fieldId) : Piece(id, pla
 void Pawn::getAvailableMoves(
     InitialConfig *config,
     MoveOptions *options,
-    unsigned int from,
     std::vector<Field *> board,
     std::vector<Piece *> pieces,
-    std::vector<Move *> moves)
+    std::vector<Move *> moves,
+    Player player)
 {
-    Player player = this->getPlayer();
-
+    unsigned int from = this->getFieldId();
     unsigned int size = config->size;
     unsigned int startLetter = config->startLetter;
 
@@ -44,7 +43,7 @@ void Pawn::getAvailableMoves(
     bool isBorderLeft = x == startLetter;
     bool isBorderRight = x == (startLetter + size - 1);
 
-    // en passant
+    // en passant TODO: fix
     if (moves.size())
     {
         Move *lastMove = moves[moves.size() - 1];

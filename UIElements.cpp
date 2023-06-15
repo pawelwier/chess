@@ -191,7 +191,7 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
         {
             game->clearOptions();
 
-            p->getAvailableMoves(game->config(), options, clickIndex, fields, game->getPieces(), game->getMoves());
+            p->getAvailableMoves(game->config(), options, fields, game->getPieces(), game->getMoves(), game->getCurrentPlayer());
 
             moves = options->getMoves();
             takes = options->getTakes();

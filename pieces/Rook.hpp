@@ -12,8 +12,8 @@ public:
     void getAvailableMoves(
         InitialConfig *config, 
         MoveOptions *options,
-        unsigned int from,
         std::vector<Field *> board,
         std::vector<Piece *> pieces,
-        std::vector<Move *> moves);
+        std::vector<Move *> moves,
+        Player player);
 };

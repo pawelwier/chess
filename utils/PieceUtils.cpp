@@ -36,7 +36,7 @@ bool PieceUtils::isPlayerPiece(Piece *piece, Player player)
 Piece *PieceUtils::findPieceByPieceId(std::vector<Piece *> pieces, unsigned int pieceId)
 {
     std::vector<Piece *>::iterator result = std::find_if(pieces.begin(), pieces.end(), [pieceId](Piece *piece)
-                                                         { return piece->getId() == pieceId; });
+        { return piece->getId() == pieceId; });
     ptrdiff_t index = std::distance(pieces.begin(), result);
     return pieces[index];
 }
@@ -48,7 +48,7 @@ unsigned int PieceUtils::getPiecePoints(std::vector<Piece *> pieces)
     points.resize(pieces.size());
 
     std::transform(pieces.begin(), pieces.end(), points.begin(), [](Piece *piece)
-                   { return piece->getPoints(); });
+        { return piece->getPoints(); });
 
     unsigned int sum = std::accumulate(points.begin(), points.end(), 0);
 

@@ -19,13 +19,12 @@ Rook::Rook(unsigned int id, Player player, unsigned int fieldId) : Piece(id, pla
 void Rook::getAvailableMoves(
     InitialConfig *config,
     MoveOptions *options,
-    unsigned int from,
     std::vector<Field *> board,
     std::vector<Piece *> pieces,
-    std::vector<Move *> moves)
+    std::vector<Move *> moves,
+    Player player)
 {
-    Player player = this->getPlayer();
-
+    unsigned int from = this->getFieldId();
     Field *fromField = FieldUtils::findFieldByFieldId(board, from);
     unsigned int x = fromField->getX();
     unsigned int y = fromField->getY();

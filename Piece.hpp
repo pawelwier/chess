@@ -30,10 +30,10 @@ public:
     virtual void getAvailableMoves(
         InitialConfig* config,
         MoveOptions *options,
-        unsigned int from,
         std::vector<Field *> board,
         std::vector<Piece *> pieces,
-        std::vector<Move *> moves) = 0;
+        std::vector<Move *> moves,
+        Player player) = 0;
 
     void move(unsigned int to);
 

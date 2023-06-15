@@ -17,13 +17,12 @@ Queen::Queen(unsigned int id, Player player, unsigned int fieldId) : Piece(id, p
 void Queen::getAvailableMoves(
     InitialConfig *config,
     MoveOptions *options,
-    unsigned int from,
     std::vector<Field *> board,
     std::vector<Piece *> pieces,
-    std::vector<Move *> moves)
+    std::vector<Move *> moves,
+    Player player)
 {
-    Player player = this->getPlayer();
-
+    unsigned int from = this->getFieldId();
     unsigned int number = config->startNumber;
     unsigned int letter = config->startLetter;
     unsigned int count = config->fieldCount;

@@ -121,9 +121,10 @@ int main()
 
             pieceSymbol.setPosition(float(posX), float(posY));
 
-
             window.draw(pieceSymbol);
         }
+
+        game->getChecks();
 
         for (unsigned int fieldId : game->getMoveOptions())
         {

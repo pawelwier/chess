@@ -77,6 +77,10 @@ public:
     void clearOptions();
 
     std::vector<unsigned int> getTakeOptions();
+
+    unsigned int getKingFieldId(Player player);
+
+    void getChecks();
 };
 
 #endif

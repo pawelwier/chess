@@ -15,13 +15,12 @@ Knight::Knight(unsigned int id, Player player, unsigned int fieldId) : Piece(id,
 void Knight::getAvailableMoves(
     InitialConfig *config,
     MoveOptions *options,
-    unsigned int from,
     std::vector<Field *> board,
     std::vector<Piece *> pieces,
-    std::vector<Move *> moveHistory)
+    std::vector<Move *> moveHistory,
+    Player player)
 {
-    Player player = this->getPlayer();
-
+    unsigned int from = this->getFieldId();
     unsigned int x = FieldUtils::findFieldByFieldId(board, from)->getX();
     unsigned int y = FieldUtils::findFieldByFieldId(board, from)->getY();
 

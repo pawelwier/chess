@@ -18,12 +18,12 @@ King::King(unsigned int id, Player player, unsigned int fieldId) : Piece(id, pla
 void King::getAvailableMoves(
     InitialConfig *config, 
     MoveOptions *options,
-    unsigned int from,
     std::vector<Field *> board,
     std::vector<Piece *> pieces,
-    std::vector<Move *> moveHistory)
+    std::vector<Move *> moveHistory,
+    Player player)
 {
-    Player player = this->getPlayer();
+    unsigned int from = this->getFieldId();
     std::vector<unsigned int> moves;
 
     unsigned int number = config->startNumber;
