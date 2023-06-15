@@ -13,6 +13,7 @@ Knight::Knight(unsigned int id, Player player, unsigned int fieldId) : Piece(id,
 }
 
 void Knight::getAvailableMoves(
+    InitialConfig *config,
     MoveOptions *options,
     unsigned int from,
     std::vector<Field *> board,
@@ -41,9 +42,9 @@ void Knight::getAvailableMoves(
     for (std::array<unsigned int, 2> move : moves)
     {
 
-        if (MoveUtils::isOutsideBoard(move[0], move[1]))
+        if (MoveUtils::isOutsideBoard(config, move[0], move[1]))
             continue;
-        unsigned int index = FieldUtils::getFieldIndexByPosition(board, Utils::getFieldCoordinates(move[0], move[1]));
+        unsigned int index = FieldUtils::getFieldIndexByPosition(config, board, Utils::getFieldCoordinates(move[0], move[1]));
         ids.push_back(index);
     }
     MoveUtils::addMoveOptions(ids, pieces, options, player, false);

@@ -17,6 +17,7 @@ Rook::Rook(unsigned int id, Player player, unsigned int fieldId) : Piece(id, pla
 }
 
 void Rook::getAvailableMoves(
+    InitialConfig *config,
     MoveOptions *options,
     unsigned int from,
     std::vector<Field *> board,

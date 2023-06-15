@@ -13,7 +13,6 @@
 // TODO: refactor main
 int main()
 {
-    InitialConfig config;
     UIElements ui;
     auto [
         title,
@@ -36,10 +35,11 @@ int main()
 
     sf::RenderWindow window(sf::VideoMode(width, height), title);
 
-    std::vector<Piece *> pieces;
     std::vector<sf::RectangleShape> squares;
 
-    Game *game = new Game(pieces);
+    InitialConfig *config = new InitialConfig();
+
+    Game *game = new Game(config);
 
     std::vector<Field *> fields = game->getBoard();
 
@@ -88,10 +88,10 @@ int main()
 
         for (Field *field : fields)
         {
-            squares.push_back(ui.getSquare(field));
+            squares.push_back(ui.getSquare(config, field));
 
-            unsigned int x = field->getX() - config.startLetter();
-            unsigned int y = config.size() - field->getY() + 1;
+            unsigned int x = field->getX() - config->startLetter;
+            unsigned int y = config->size - field->getY() + 1;
 
             char letter = Utils::getChar(field->getX());
             sf::Text coordX(letter, font, coordSize);
@@ -100,25 +100,27 @@ int main()
             coordX.setPosition(float(x * squareSize + coordMargin), float((y - 1) * squareSize + coordSpace));
             coordY.setPosition(float(x * squareSize + coordMargin), float((y - 1) * squareSize + coordMargin));
 
-            if (field->getY() == config.startNumber())
+            if (field->getY() == config->startNumber)
                 window.draw(coordX);
-            if (field->getX() == config.startLetter())
+            if (field->getX() == config->startLetter)
                 window.draw(coordY);
         }
 
         for (Piece *piece : game->getPieces())
         {
+
             Field *field = FieldUtils::findFieldByFieldId(game->getBoard(), piece->getFieldId());
             const wchar_t icon = piece->getIcon();
             sf::Text pieceSymbol(icon, font, pieceSize);
 
-            unsigned int x = field->getX() - config.startLetter();
-            unsigned int y = config.size() - field->getY() + 1;
+            unsigned int x = field->getX() - config->startLetter;
+            unsigned int y = config->size - field->getY() + 1;
 
             unsigned int posX = x * squareSize + pieceMargin;
             signed int posY = (y - 1) * squareSize - pieceMargin;
 
             pieceSymbol.setPosition(float(posX), float(posY));
+
 
             window.draw(pieceSymbol);
         }
@@ -126,7 +128,7 @@ int main()
         for (unsigned int fieldId : game->getMoveOptions())
         {
             Field *field = FieldUtils::findFieldByFieldId(game->getBoard(), fieldId);
-            sf::CircleShape c = ui.getMoveDot(field, false, squareSize);
+            sf::CircleShape c = ui.getMoveDot(config, field, false, squareSize);
 
             window.draw(c);
         }
@@ -134,7 +136,7 @@ int main()
         for (unsigned int fieldId : game->getTakeOptions())
         {
             Field *field = FieldUtils::findFieldByFieldId(game->getBoard(), fieldId);
-            sf::CircleShape c = ui.getMoveDot(field, true, squareSize);
+            sf::CircleShape c = ui.getMoveDot(config, field, true, squareSize);
 
             window.draw(c);
         }

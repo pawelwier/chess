@@ -16,6 +16,7 @@ King::King(unsigned int id, Player player, unsigned int fieldId) : Piece(id, pla
 }
 
 void King::getAvailableMoves(
+    InitialConfig *config, 
     MoveOptions *options,
     unsigned int from,
     std::vector<Field *> board,
@@ -25,11 +26,10 @@ void King::getAvailableMoves(
     Player player = this->getPlayer();
     std::vector<unsigned int> moves;
 
-    InitialConfig config;
-    unsigned int number = config.startNumber();
-    unsigned int letter = config.startLetter();
-    unsigned int count = config.fieldCount();
-    unsigned int size = config.size();
+    unsigned int number = config->startNumber;
+    unsigned int letter = config->startLetter;
+    unsigned int count = config->fieldCount;
+    unsigned int size = config->size;
 
     Field *fromField = FieldUtils::findFieldByFieldId(board, from);
     unsigned int x = fromField->getX();

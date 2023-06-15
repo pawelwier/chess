@@ -20,13 +20,12 @@ bool MoveUtils::isOpponentPieceOnField(unsigned int index, std::vector<Piece *> 
     return !!piece && piece->getPlayer() == opponent;
 }
 
-bool MoveUtils::isOutsideBoard(unsigned int x, unsigned int y)
+bool MoveUtils::isOutsideBoard(InitialConfig* config, unsigned int x, unsigned int y)
 {
-    InitialConfig config;
 
-    unsigned int size = config.size();
-    unsigned int startNumber = config.startNumber();
-    unsigned int startLetter = config.startLetter();
+    unsigned int size = config->size;
+    unsigned int startNumber = config->startNumber;
+    unsigned int startLetter = config->startLetter;
 
     return (x < startLetter) || (x > (startLetter + size - 1)) || (y < startNumber) || (y > startNumber + size - 1);
 }

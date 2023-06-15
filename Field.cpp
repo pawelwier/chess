@@ -3,13 +3,11 @@
 
 #define LOOP(x) for (int i = 0; i < x; i++)
 
-Field::Field(unsigned short int x, unsigned short int y, unsigned short int id)
-{
-    x_ = x;
-    y_ = y;
-    id_ = id;
-    isBlack_ = Utils::isOdd(x) != Utils::isOdd(y);
-}
+Field::Field(unsigned short int x, unsigned short int y, unsigned short int id) :
+    x_(x),
+    y_(y),
+    id_(id),
+    isBlack_(Utils::isOdd(x) != Utils::isOdd(y)) {}
 
 std::string Field::getField()
 {

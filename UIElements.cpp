@@ -4,33 +4,28 @@
 #include "Piece.hpp"
 #include "Move.hpp"
 
-UIElements::UIElements()
+UIElements::UIElements() :
+    title("Chess game"),
+    width(800),
+    height(1200),
+    fps(20),
+    squareSize(100.f),
+    coordSpace(65),
+    pieceSize(90),
+    coordSize(25),
+    pieceMargin(15),
+    coordMargin(10),
+    takesTop(900),
+    takesHeight(200),
+    takesPieceSize(70),
+    takesNext(40),
+    pointsDifferenceSize(40),
+    pointsDifferenceTop(this->takesTop + 2 * this->takesPieceSize) {}
+
+sf::CircleShape UIElements::getMoveDot(InitialConfig* config, Field *field, bool isTake, unsigned int squareSize)
 {
-    title = "Chess game";
-    width = 800;
-    height = 1200;
-    fps = 20;
-    squareSize = 100.f;
-    coordSpace = 65;
-    pieceSize = 90;
-    coordSize = 25;
-    pieceMargin = 15;
-    coordMargin = 10;
-    takesTop = 900;
-    takesHeight = 200;
-    takesPieceSize = 70;
-    takesNext = 40;
-    pointsDifferenceSize = 40;
-    pointsDifferenceTop = this->takesTop + 2 * this->takesPieceSize;
-}
-
-
-sf::CircleShape UIElements::getMoveDot(Field *field, bool isTake, unsigned int squareSize)
-{
-    InitialConfig config;
-
-    unsigned int x = field->getX() - config.startLetter();
-    unsigned int y = config.size() - field->getY() + 1;
+    unsigned int x = field->getX() - config->startLetter;
+    unsigned int y = config->size - field->getY() + 1;
 
     unsigned int posX = x * squareSize + (squareSize / 3);
     unsigned int posY = (y - 1) * squareSize + (squareSize / 3);
@@ -45,11 +40,9 @@ sf::CircleShape UIElements::getMoveDot(Field *field, bool isTake, unsigned int s
     return circle;
 }
 
-sf::RectangleShape UIElements::getSquare(Field *field)
+sf::RectangleShape UIElements::getSquare(InitialConfig* config, Field *field)
 {
-    InitialConfig config;
-
-    unsigned int x = field->getX() - config.startLetter();
+    unsigned int x = field->getX() - config->startLetter;
     unsigned int y = field->getY();
 
     sf::RectangleShape square;
@@ -81,11 +74,11 @@ sf::RectangleShape UIElements::getTakesFrame()
 
 void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event event)
 {
-    InitialConfig config;
+    InitialConfig* config = game->config();
     Player player = game->getCurrentPlayer();
 
     unsigned int moveNum = game->getMoveCount() + 1;
-    unsigned short int size = config.size();
+    unsigned short int size = config->size;
 
     switch (event.type)
     {
@@ -99,8 +92,8 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
         if (mouseY > squareSize * size)
             break;
 
-        int clickX = mouseX / squareSize + config.startLetter();
-        int clickY = config.size() - (mouseY / squareSize) + config.startNumber();
+        int clickX = mouseX / squareSize + config->startLetter;
+        int clickY = config->size - (mouseY / squareSize) + config->startNumber;
 
         std::vector<Field *> fields = game->getBoard();
 
@@ -109,7 +102,7 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
         std::vector<unsigned int> moves;
         std::vector<unsigned int> takes;
 
-        unsigned int clickIndex = FieldUtils::getFieldIndexByPosition(fields, Utils::getFieldCoordinates(clickX, clickY));
+        unsigned int clickIndex = FieldUtils::getFieldIndexByPosition(game->config(), fields, Utils::getFieldCoordinates(clickX, clickY));
 
         Piece *p = PieceUtils::findPieceByFieldId(game->getPieces(), clickIndex);
 
@@ -198,7 +191,7 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
         {
             game->clearOptions();
 
-            p->getAvailableMoves(options, clickIndex, fields, game->getPieces(), game->getMoves());
+            p->getAvailableMoves(game->config(), options, clickIndex, fields, game->getPieces(), game->getMoves());
 
             moves = options->getMoves();
             takes = options->getTakes();

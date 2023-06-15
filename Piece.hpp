@@ -2,6 +2,7 @@
 #define PIECE_H
 
 #include "MoveOptions.hpp"
+#include "InitialConfig.hpp"
 #include "Field.hpp"
 #include "Move.hpp"
 #include "PieceType.hpp"
@@ -27,6 +28,7 @@ public:
     Piece(unsigned int id, Player player, PieceType type, unsigned int fieldId, unsigned int points);
 
     virtual void getAvailableMoves(
+        InitialConfig* config,
         MoveOptions *options,
         unsigned int from,
         std::vector<Field *> board,

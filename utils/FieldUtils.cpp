@@ -1,17 +1,16 @@
 #include "FieldUtils.hpp"
+#include "../InitialConfig.hpp"
 #include "../Player.hpp"
 #include "../Field.hpp"
 
 #include <iostream>
 #include <vector>
 
-unsigned short int FieldUtils::getFieldIndexByPosition(std::vector<Field *> fields, std::string position)
+unsigned short int FieldUtils::getFieldIndexByPosition(InitialConfig* config, std::vector<Field *> fields, std::string position)
 {
     int index;
 
-    InitialConfig config;
-
-    for (size_t i = 0; i < config.fieldCount(); i++)
+    for (size_t i = 0; i < config->fieldCount; i++)
     {
         if (fields[i]->getField() == position)
         {

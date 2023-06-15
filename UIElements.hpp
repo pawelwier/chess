@@ -32,9 +32,9 @@ struct UIElements
 
     UIElements();
 
-    sf::CircleShape getMoveDot(Field *field, bool isTake, unsigned int squareSize);
+    sf::CircleShape getMoveDot(InitialConfig* config, Field *field, bool isTake, unsigned int squareSize);
 
-    sf::RectangleShape getSquare(Field *field);
+    sf::RectangleShape getSquare(InitialConfig* config, Field *field);
 
     sf::RectangleShape getTakesFrame();
 

@@ -15,6 +15,7 @@ Bishop::Bishop(unsigned int id, Player player, unsigned int fieldId) : Piece(id,
 }
 
 void Bishop::getAvailableMoves(
+    InitialConfig *config, 
     MoveOptions *options,
     unsigned int from,
     std::vector<Field *> board,
@@ -23,11 +24,10 @@ void Bishop::getAvailableMoves(
 {
     Player player = this->getPlayer();
 
-    InitialConfig config;
-    unsigned int number = config.startNumber();
-    unsigned int letter = config.startLetter();
-    unsigned int count = config.fieldCount();
-    unsigned int size = config.size();
+    unsigned int number = config->startNumber;
+    unsigned int letter = config->startLetter;
+    unsigned int count = config->fieldCount;
+    unsigned int size = config->size;
 
     Field *fromField = FieldUtils::findFieldByFieldId(board, from);
     unsigned int x = fromField->getX();

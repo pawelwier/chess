@@ -10,6 +10,7 @@ public:
     explicit Queen(unsigned int id, Player player, unsigned int fieldId);
 
     void getAvailableMoves(
+        InitialConfig *config,
         MoveOptions *options,
         unsigned int from,
         std::vector<Field *> board,

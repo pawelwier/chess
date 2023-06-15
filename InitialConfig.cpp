@@ -2,52 +2,16 @@
 
 #include <cmath>
 
-unsigned short int InitialConfig::size()
-{
-    return SIZE;
-}
-
-unsigned short int InitialConfig::fieldCount()
-{
-    return pow(SIZE, 2);
-}
-
-unsigned short int InitialConfig::startLetter()
-{
-    return START_LETTER;
-}
-
-unsigned short int InitialConfig::startNumber()
-{
-    return START_NUMBER;
-}
-
-std::vector<unsigned int> InitialConfig::pawnIds()
-{
-    return PAWN_IDS;
-}
-
-std::vector<unsigned int> InitialConfig::rookIds()
-{
-    return ROOK_IDS;
-}
-
-std::vector<unsigned int> InitialConfig::knightIds()
-{
-    return KNIGHT_IDS;
-}
-
-std::vector<unsigned int> InitialConfig::bishopIds()
-{
-    return BISHOP_IDS;
-}
-
-std::vector<unsigned int> InitialConfig::queenIds()
-{
-    return QUEEN_IDS;
-}
-
-std::vector<unsigned int> InitialConfig::kingIds()
-{
-    return KING_IDS;
-}
+InitialConfig::InitialConfig() :
+    size(8),
+    startLetter(65), // A
+    startNumber(1)
+    {
+        fieldCount = pow(size, 2);
+        pawnIds = {8, 9, 10, 11, 12, 13, 14, 15, 48, 49, 50, 51, 52, 53, 54, 55};
+        rookIds = {0, 7, 56, 63};
+        knightIds = {1, 6, 57, 62};
+        bishopIds = {2, 5, 58, 61};
+        queenIds = {3, 59};
+        kingIds = {4, 60};
+    }

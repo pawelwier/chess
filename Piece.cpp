@@ -9,15 +9,13 @@
 #include <algorithm>
 #include <iterator>
 
-Piece::Piece(unsigned int id, Player player, PieceType type, unsigned int fieldId, unsigned int points)
-{
-    id_ = id;
-    player_ = player;
-    type_ = type;
-    fieldId_ = fieldId;
-    points_ = points;
-    isTaken_ = false;
-}
+Piece::Piece(unsigned int id, Player player, PieceType type, unsigned int fieldId, unsigned int points) : 
+    id_(id),
+    player_(player),
+    type_(type),
+    fieldId_(fieldId),
+    points_(points),
+    isTaken_(false) {}
 
 void Piece::move(unsigned int to)
 {

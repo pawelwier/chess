@@ -2,6 +2,7 @@
 #define MOVE_UTILS_H
 
 #include "../MoveOptions.hpp"
+#include "../InitialConfig.hpp"
 #include "../Player.hpp"
 #include "../Piece.hpp"
 
@@ -14,7 +15,7 @@ public:
 
     static bool isOpponentPieceOnField(unsigned int index, std::vector<Piece *> pieces, Player player);
 
-    static bool isOutsideBoard(unsigned int x, unsigned int y);
+    static bool isOutsideBoard(InitialConfig* config, unsigned int x, unsigned int y);
 
     static void addMoveOptions(std::vector<unsigned int> ids, std::vector<Piece *> pieces, MoveOptions *options, Player player, bool stopOnPiece = true);
 };

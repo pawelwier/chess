@@ -1,11 +1,12 @@
 #include "../Field.hpp"
 #include "../Player.hpp"
 #include "../Game.hpp"
+#include "../InitialConfig.hpp"
 
 class FieldUtils
 {
 public:
-    static unsigned short int getFieldIndexByPosition(std::vector<Field *> fields, std::string position);
+    static unsigned short int getFieldIndexByPosition(InitialConfig* config, std::vector<Field *> fields, std::string position);
 
     static Player initPiecePlayer(short unsigned id);
 

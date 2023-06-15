@@ -14,6 +14,7 @@ Pawn::Pawn(unsigned int id, Player player, unsigned int fieldId) : Piece(id, pla
 }
 
 void Pawn::getAvailableMoves(
+    InitialConfig *config,
     MoveOptions *options,
     unsigned int from,
     std::vector<Field *> board,
@@ -21,10 +22,9 @@ void Pawn::getAvailableMoves(
     std::vector<Move *> moves)
 {
     Player player = this->getPlayer();
-    InitialConfig config;
 
-    unsigned int size = config.size();
-    unsigned int startLetter = config.startLetter();
+    unsigned int size = config->size;
+    unsigned int startLetter = config->startLetter;
 
     unsigned int firstIndex = player ? from - size : from + size;
     if (MoveUtils::isFieldEmpty(firstIndex, pieces))

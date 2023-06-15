@@ -14,6 +14,7 @@
 class Game
 {
 private:
+    InitialConfig* config_;
     std::string icon_;
     Player currentPlayer_;
     std::vector<Field *> board_;
@@ -25,7 +26,9 @@ private:
     std::vector<unsigned int> takeOptions_;
 
 public:
-    Game(std::vector<Piece *> pieces);
+    Game(InitialConfig* config);
+
+    InitialConfig* config();
 
     std::vector<Field *> getBoard();
 
