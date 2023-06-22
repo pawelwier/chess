@@ -30,7 +30,8 @@ int main()
         takesPieceSize,
         takesNext,
         pointsDifferenceSize,
-        pointsDifferenceTop
+        pointsDifferenceTop,
+        checkMarkingSize
     ] = ui;
 
     sf::RenderWindow window(sf::VideoMode(width, height), title);
@@ -113,23 +114,32 @@ int main()
             const wchar_t icon = piece->getIcon();
             sf::Text pieceSymbol(icon, font, pieceSize);
 
-            unsigned int x = field->getX() - config->startLetter;
-            unsigned int y = config->size - field->getY() + 1;
+            std::array<float, 2> pos = ui.getSymbolPos(field, config, squareSize, {pieceMargin, -pieceMargin});
 
-            unsigned int posX = x * squareSize + pieceMargin;
-            signed int posY = (y - 1) * squareSize - pieceMargin;
-
-            pieceSymbol.setPosition(float(posX), float(posY));
+            pieceSymbol.setPosition(pos[0], pos[1]);
 
             window.draw(pieceSymbol);
         }
 
-        game->getChecks();
+        if (game->isCheck())
+        {
+            unsigned int kingFieldId = game->getKingFieldId(game->getCurrentPlayer());
+            Field *kingField = FieldUtils::findFieldByFieldId(game->getBoard(), kingFieldId);
+
+            std::array<float, 2> pos = ui.getSymbolPos(kingField, config, squareSize, {(squareSize / 3) + 3, 0});
+
+            sf::Color color(235, 64, 52);
+
+            sf::Text mark("!", font, checkMarkingSize);
+            mark.setFillColor(color);
+            mark.setPosition(pos[0], pos[1]);
+            window.draw(mark);
+        }
 
         for (unsigned int fieldId : game->getMoveOptions())
         {
             Field *field = FieldUtils::findFieldByFieldId(game->getBoard(), fieldId);
-            sf::CircleShape c = ui.getMoveDot(config, field, false, squareSize);
+            sf::CircleShape c = ui.getMoveDot(config, field, false);
 
             window.draw(c);
         }
@@ -137,7 +147,7 @@ int main()
         for (unsigned int fieldId : game->getTakeOptions())
         {
             Field *field = FieldUtils::findFieldByFieldId(game->getBoard(), fieldId);
-            sf::CircleShape c = ui.getMoveDot(config, field, true, squareSize);
+            sf::CircleShape c = ui.getMoveDot(config, field, true);
 
             window.draw(c);
         }

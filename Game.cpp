@@ -278,7 +278,7 @@ unsigned int Game::getKingFieldId(Player player)
     return pieces[index]->getFieldId();
 }
 
-void Game::getChecks()
+bool Game::isCheck()
 {
     Player current = this->getCurrentPlayer();
     Player opponent = current == Player::black ? Player::white : Player::black;
@@ -300,9 +300,5 @@ void Game::getChecks()
 
     unsigned int kingIndex = this->getKingFieldId(current);
 
-    if (Utils::includes(options->getTakes(), kingIndex))
-    {
-        std::cout << "king in danger!" << std::endl;
-    }
-
+    return Utils::includes(options->getTakes(), kingIndex);
 }

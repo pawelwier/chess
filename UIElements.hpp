@@ -1,5 +1,6 @@
 #include "Field.hpp"
 #include "Game.hpp"
+#include "InitialConfig.hpp"
 #include "./utils/FieldUtils.hpp"
 #include "./utils/PieceUtils.hpp"
 
@@ -19,8 +20,8 @@ struct UIElements
     int coordSpace;
     int pieceSize;
     int coordSize;
-    int pieceMargin;
-    int coordMargin;
+    float pieceMargin;
+    float coordMargin;
 
     // takes
     int takesTop;
@@ -29,10 +30,15 @@ struct UIElements
     int takesNext;
     int pointsDifferenceSize;
     int pointsDifferenceTop;
+    int checkMarkingSize;
 
     UIElements();
 
-    sf::CircleShape getMoveDot(InitialConfig* config, Field *field, bool isTake, unsigned int squareSize);
+    std::array<float, 2> getSymbolPos(Field *field, InitialConfig *config, unsigned int size, std::array<float, 2> shift);
+
+    sf::CircleShape getMoveDot(InitialConfig* config, Field *field, bool isTake);
+
+    sf::Text getCheckMarking(InitialConfig* config, Field *field, sf::Font font);
 
     sf::RectangleShape getSquare(InitialConfig* config, Field *field);
 

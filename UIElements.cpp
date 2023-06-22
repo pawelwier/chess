@@ -2,6 +2,7 @@
 #include "InitialConfig.hpp"
 #include "MoveOptions.hpp"
 #include "Piece.hpp"
+#include "InitialConfig.hpp"
 #include "Move.hpp"
 
 UIElements::UIElements() :
@@ -13,31 +14,51 @@ UIElements::UIElements() :
     coordSpace(65),
     pieceSize(90),
     coordSize(25),
-    pieceMargin(15),
-    coordMargin(10),
+    pieceMargin(15.f),
+    coordMargin(10.f),
     takesTop(900),
     takesHeight(200),
     takesPieceSize(70),
     takesNext(40),
     pointsDifferenceSize(40),
-    pointsDifferenceTop(this->takesTop + 2 * this->takesPieceSize) {}
+    pointsDifferenceTop(this->takesTop + 2 * this->takesPieceSize),
+    checkMarkingSize(80) {}
 
-sf::CircleShape UIElements::getMoveDot(InitialConfig* config, Field *field, bool isTake, unsigned int squareSize)
+std::array<float, 2> UIElements::getSymbolPos(Field* field, InitialConfig* config, unsigned int size, std::array<float, 2> shift)
 {
     unsigned int x = field->getX() - config->startLetter;
     unsigned int y = config->size - field->getY() + 1;
 
-    unsigned int posX = x * squareSize + (squareSize / 3);
-    unsigned int posY = (y - 1) * squareSize + (squareSize / 3);
+    float posX = x * size + shift[0];
+    float posY = (y - 1) * size + shift[1];
+
+    return {posX, posY};
+}
+
+sf::CircleShape UIElements::getMoveDot(InitialConfig* config, Field *field, bool isTake)
+{
+    std::array<float, 2> pos = getSymbolPos(field, config, squareSize, {squareSize / 3, squareSize / 3});
 
     sf::CircleShape circle;
     sf::Color moveBg(74, 161, 109);
     sf::Color takeBg(168, 88, 92);
     circle.setRadius(squareSize / 6);
     circle.setFillColor(isTake ? takeBg : moveBg);
-    circle.setPosition(float(posX), float(posY));
+    circle.setPosition(pos[0], pos[1]);
 
     return circle;
+}
+
+sf::Text UIElements::getCheckMarking(InitialConfig* config, Field *field, sf::Font font)
+{
+    std::array<float, 2> pos = getSymbolPos(field, config, squareSize, {squareSize + (squareSize / 3), squareSize / 3});
+
+    sf::Color color(235, 64, 52);
+    sf::Text mark("!", font, checkMarkingSize);
+    mark.setFillColor(color);
+    mark.setPosition(pos[0], pos[1]);
+
+    return mark;
 }
 
 sf::RectangleShape UIElements::getSquare(InitialConfig* config, Field *field)

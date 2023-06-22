@@ -80,7 +80,7 @@ public:
 
     unsigned int getKingFieldId(Player player);
 
-    void getChecks();
+    bool isCheck();
 };
 
 #endif
