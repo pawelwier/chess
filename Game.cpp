@@ -237,7 +237,7 @@ void Game::printMove(unsigned int order)
     // TODO: edit / delete?
     std::vector<Move *> moves = this->getMoves();
     std::vector<Move *>::iterator result = std::find_if(std::begin(moves), std::end(moves), [order](Move *move)
-                                                        { return move->getOrder() == order; });
+        { return move->getOrder() == order; });
     ptrdiff_t index = std::distance(moves.begin(), result);
 
     Move *move = moves_[index];

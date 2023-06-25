@@ -19,6 +19,7 @@ int main()
         width,
         height,
         fps,
+        font,
         squareSize,
         coordSpace,
         pieceSize,
@@ -44,9 +45,6 @@ int main()
 
     std::vector<Field *> fields = game->getBoard();
 
-    sf::Font font;
-    font.loadFromFile("FreeSerif.ttf");
-
     game->assignInitialPieces(fields);
 
     while (window.isOpen())
@@ -65,75 +63,18 @@ int main()
             window.draw(square);
         }
 
-        sf::RectangleShape takesFrame = ui.getTakesFrame();
+        ui.drawTakesFrame(&window, game->getTakes());
 
-        window.draw(takesFrame);
+        ui.drawCoords(&window, config, &squares, fields);
 
-        std::vector<Piece *> takes = game->getTakes();
-        unsigned int indexWhite{};
-        unsigned int indexBlack{};
-
-        for (Piece *piece : takes)
-        {
-            wchar_t icon = piece->getIcon();
-            Player player = piece->getPlayer();
-
-            sf::Text pieceSymbol(icon, font, takesPieceSize);
-            float takeX = float(player ? indexBlack : indexWhite);
-            float takeY = float(player ? takesTop : takesTop + takesPieceSize);
-            pieceSymbol.setPosition(takeX, takeY);
-            player ? indexBlack += takesNext : indexWhite += takesNext;
-
-            window.draw(pieceSymbol);
-        }
-
-        for (Field *field : fields)
-        {
-            squares.push_back(ui.getSquare(config, field));
-
-            unsigned int x = field->getX() - config->startLetter;
-            unsigned int y = config->size - field->getY() + 1;
-
-            char letter = Utils::getChar(field->getX());
-            sf::Text coordX(letter, font, coordSize);
-            sf::Text coordY(std::to_string(field->getY()), font, coordSize);
-
-            coordX.setPosition(float(x * squareSize + coordMargin), float((y - 1) * squareSize + coordSpace));
-            coordY.setPosition(float(x * squareSize + coordMargin), float((y - 1) * squareSize + coordMargin));
-
-            if (field->getY() == config->startNumber)
-                window.draw(coordX);
-            if (field->getX() == config->startLetter)
-                window.draw(coordY);
-        }
-
-        for (Piece *piece : game->getPieces())
-        {
-
-            Field *field = FieldUtils::findFieldByFieldId(game->getBoard(), piece->getFieldId());
-            const wchar_t icon = piece->getIcon();
-            sf::Text pieceSymbol(icon, font, pieceSize);
-
-            std::array<float, 2> pos = ui.getSymbolPos(field, config, squareSize, {pieceMargin, -pieceMargin});
-
-            pieceSymbol.setPosition(pos[0], pos[1]);
-
-            window.draw(pieceSymbol);
-        }
+        ui.drawPieces(&window, config, game->getBoard(), game->getPieces());
 
         if (game->isCheck())
         {
             unsigned int kingFieldId = game->getKingFieldId(game->getCurrentPlayer());
             Field *kingField = FieldUtils::findFieldByFieldId(game->getBoard(), kingFieldId);
 
-            std::array<float, 2> pos = ui.getSymbolPos(kingField, config, squareSize, {(squareSize / 3) + 3, 0});
-
-            sf::Color color(235, 64, 52);
-
-            sf::Text mark("!", font, checkMarkingSize);
-            mark.setFillColor(color);
-            mark.setPosition(pos[0], pos[1]);
-            window.draw(mark);
+            ui.drawCheckMark();
         }
 
         for (unsigned int fieldId : game->getMoveOptions())
