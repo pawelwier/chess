@@ -63,50 +63,23 @@ int main()
             window.draw(square);
         }
 
-        ui.drawTakesFrame(&window, game->getTakes());
-
         ui.drawCoords(&window, config, &squares, fields);
 
         ui.drawPieces(&window, config, game->getBoard(), game->getPieces());
+
+        ui.drawDots(&window, config, game->getMoveOptions(), game->getBoard());
+        ui.drawDots(&window, config, game->getTakeOptions(), game->getBoard(), true);
 
         if (game->isCheck())
         {
             unsigned int kingFieldId = game->getKingFieldId(game->getCurrentPlayer());
             Field *kingField = FieldUtils::findFieldByFieldId(game->getBoard(), kingFieldId);
 
-            ui.drawCheckMark();
+            ui.drawCheckMark(&window, config, kingField);
         }
 
-        for (unsigned int fieldId : game->getMoveOptions())
-        {
-            Field *field = FieldUtils::findFieldByFieldId(game->getBoard(), fieldId);
-            sf::CircleShape c = ui.getMoveDot(config, field, false);
-
-            window.draw(c);
-        }
-
-        for (unsigned int fieldId : game->getTakeOptions())
-        {
-            Field *field = FieldUtils::findFieldByFieldId(game->getBoard(), fieldId);
-            sf::CircleShape c = ui.getMoveDot(config, field, true);
-
-            window.draw(c);
-        }
-
-        unsigned int whitePoints = game->getPlayerPoints(Player::white);
-        unsigned int blackPoints = game->getPlayerPoints(Player::black);
-
-        int difference = whitePoints - blackPoints;
-
-        sf::Color color = difference > 0 ? sf::Color::White : sf::Color::Black;
-
-        std::string differenceText = difference ? "+" + std::to_string(abs(difference)) : "";
-
-        sf::Text text(differenceText, font, pointsDifferenceSize);
-        text.setFillColor(color);
-        text.setPosition(float(pieceMargin), float(pointsDifferenceTop));
-
-        window.draw(text);
+        ui.drawTakesFrame(&window, game->getTakes());
+        ui.drawTakesDetails(&window, game->getPlayerPoints(Player::white), game->getPlayerPoints(Player::black));
 
         window.display();
     }

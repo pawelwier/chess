@@ -164,14 +164,39 @@ void UIElements::drawTakesFrame(sf::RenderWindow* window, std::vector<Piece *> t
     }
 }
 
-void UIElements::drawCheckMark(InitialConfig* config, Field *kingField)
+void UIElements::drawTakesDetails(sf::RenderWindow* window, unsigned int whitePoints, unsigned int blackPoints)
+{
+        int difference = whitePoints - blackPoints;
+
+        sf::Color color = difference > 0 ? sf::Color::White : sf::Color::Black;
+
+        std::string differenceText = difference ? "+" + std::to_string(abs(difference)) : "";
+
+        sf::Text text(differenceText, font, pointsDifferenceSize);
+        text.setFillColor(color);
+        text.setPosition(float(pieceMargin), float(pointsDifferenceTop));
+
+        window->draw(text);
+}
+
+void UIElements::drawCheckMark(sf::RenderWindow *window, InitialConfig* config, Field *kingField)
 {
     sf::Text mark = getCheckMarking(config, kingField);
 
-    window.draw(mark);
+    window->draw(mark);
 }
 
-// TODO: move out
+void UIElements::drawDots(sf::RenderWindow *window, InitialConfig* config, std::vector<unsigned int> fieldIds, std::vector<Field *> board, bool isTake)
+{
+    for (unsigned int fieldId : fieldIds)
+        {
+            Field *field = FieldUtils::findFieldByFieldId(board, fieldId);
+            sf::CircleShape c = this->getMoveDot(config, field, isTake);
+
+            window->draw(c);
+        }
+}
+
 void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event event)
 {
     InitialConfig* config = game->config();

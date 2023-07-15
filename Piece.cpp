@@ -94,7 +94,7 @@ unsigned int Piece::getPoints()
 unsigned int Piece::findPieceIndex(std::vector<Piece *> v, unsigned int fieldId)
 {
     std::vector<Piece *>::iterator result = std::find_if(v.begin(), v.end(), [fieldId](Piece *piece)
-                                                         { return piece->getFieldId() == fieldId; }); // TODO: read into
+        { return piece->getFieldId() == fieldId; }); // TODO: read into
     ptrdiff_t index = std::distance(v.begin(), result);
     return index;
 }

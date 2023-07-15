@@ -53,7 +53,11 @@ struct UIElements
 
     void drawTakesFrame(sf::RenderWindow* window, std::vector<Piece *> takes);
 
-    void drawCheckMark(InitialConfig* config, Field *kingField);
+    void drawTakesDetails(sf::RenderWindow* window, unsigned int whitePoints, unsigned int blackPoints);
+
+    void drawCheckMark(sf::RenderWindow* window, InitialConfig* config, Field *kingField);
+
+    void drawDots(sf::RenderWindow *window, InitialConfig* config, std::vector<unsigned int> fieldIds, std::vector<Field *> board, bool isTake = false);
 
     void handleEvents(Game *game, sf::RenderWindow *window, sf::Event event);
 };
