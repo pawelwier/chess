@@ -15,6 +15,7 @@ public:
     std::vector<unsigned int> getTakes();
     void addMove(unsigned int move);
     void addTake(unsigned int take);
+    void clear();
 };
 
 #endif

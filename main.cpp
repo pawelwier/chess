@@ -10,7 +10,6 @@
 #include <string>
 #include <iostream>
 
-// TODO: refactor main
 int main()
 {
     UIElements ui;

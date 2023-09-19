@@ -284,12 +284,19 @@ unsigned int Game::getKingFieldId(Player player)
     return pieces[index]->getFieldId();
 }
 
-bool Game::isCheck()
+Player Game::getOpponent()
 {
     Player current = this->getCurrentPlayer();
-    Player opponent = current == Player::black ? Player::white : Player::black;
+    return current == Player::black ? Player::white : Player::black;
+}
 
-    MoveOptions *options = new MoveOptions;
+bool Game::isFieldInThreat(int fieldIndex)
+{
+    bool isInThreat = false;
+    Player current = this->getCurrentPlayer();
+    Player opponent = this->getOpponent();
+
+    MoveOptions *options = new MoveOptions; // TODO: passed as arg? needs to delete
 
     std::vector<Piece *> opponentPieces = getPiecesByPlayer(opponent);
 
@@ -302,9 +309,29 @@ bool Game::isCheck()
             this->getPieces(),
             this->getMoves(),
             opponent);
+
+        // TODO: a bit ugly
+        if ((piece->getType() != PieceType::pawn 
+            && Utils::includes(options->getMoves(), fieldIndex))
+            || Utils::includes(options->getTakes(), fieldIndex))
+        {
+            isInThreat = true;
+            break;
+        }
+        else
+        {
+            options->clear();
+        }
     }
+
+    return isInThreat;
+}
+
+bool Game::isCheck()
+{
+    Player current = this->getCurrentPlayer();
 
     unsigned int kingIndex = this->getKingFieldId(current);
 
-    return Utils::includes(options->getTakes(), kingIndex);
+    return this->isFieldInThreat(kingIndex);
 }

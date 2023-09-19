@@ -80,6 +80,10 @@ public:
 
     unsigned int getKingFieldId(Player player);
 
+    Player getOpponent();
+
+    bool isFieldInThreat(int fieldIndex);
+
     bool isCheck();
 };
 

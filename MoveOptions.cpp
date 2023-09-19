@@ -14,10 +14,16 @@ std::vector<unsigned int> MoveOptions::getTakes()
 
 void MoveOptions::addMove(unsigned int move)
 {
-    moves_.push_back(move);
+    this->moves_.push_back(move);
 }
 
 void MoveOptions::addTake(unsigned int take)
 {
-    takes_.push_back(take);
+    this->takes_.push_back(take);
+}
+
+void MoveOptions::clear()
+{
+    this->moves_ = {};
+    this->takes_ = {};
 }

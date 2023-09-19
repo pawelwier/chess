@@ -263,8 +263,6 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
                         game->takePiece(piece);
                         piece->setTaken(true);
                     }
-
-                    // delete piece; // ?? gets moved to takes frame
                 }
 
                 int from = piece->getFieldId();
@@ -325,7 +323,8 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
             {
                 for (unsigned int move : moves)
                 {
-                    game->addMoveOption(move);
+                    if (!(p->getType() == PieceType::king && game->isFieldInThreat(move)))
+                        game->addMoveOption(move);
                 }
             }
 
@@ -333,7 +332,8 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
             {
                 for (unsigned int take : takes)
                 {
-                    game->addTakeOption(take);
+                    if (!(p->getType() == PieceType::king && game->isFieldInThreat(take)))
+                        game->addTakeOption(take);
                 }
             }
             game->setSelectedPiece(p);
