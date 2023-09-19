@@ -142,12 +142,18 @@ Piece *Game::getSelectedPiece()
 
 bool Game::fieldHasPiece(unsigned int fieldId)
 {
-    return Utils::includes(config_->pawnIds, fieldId) ||
-           Utils::includes(config_->rookIds, fieldId) ||
-           Utils::includes(config_->knightIds, fieldId) ||
-           Utils::includes(config_->bishopIds, fieldId) ||
-           Utils::includes(config_->kingIds, fieldId) ||
-           Utils::includes(config_->queenIds, fieldId);
+    std::vector<std::vector<unsigned int>> pieceIds{
+        {config_->pawnIds, config_->rookIds, config_->knightIds, config_->bishopIds, config_->queenIds, config_->kingIds}};
+    bool hasPiece{};
+
+    for (std::vector<unsigned int> idSet : pieceIds)
+    {
+        if (Utils::includes(idSet, fieldId))
+        {
+            hasPiece = true;
+        }
+    }
+    return hasPiece;
 }
 
 void Game::addMoveOption(unsigned int option)

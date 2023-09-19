@@ -19,6 +19,8 @@ struct InitialConfig
     std::vector<unsigned int> queenIds;
     std::vector<unsigned int> kingIds;
 
+    std::vector<std::vector<unsigned int>> pieceIds;
+
     InitialConfig();
 };
 
