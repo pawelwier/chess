@@ -183,49 +183,22 @@ void Game::assignInitialPieces(std::vector<Field *> fields)
             continue;
 
         Player player = FieldUtils::initPiecePlayer(fieldId);
+        Piece *piece;
 
-        // TODO: refactor
-        if (Utils::includes(config_->pawnIds, fieldId))
-        {
-            this->addPiece(new Pawn(id, player, fieldId));
-            id++;
-        }
-
-        if (Utils::includes(config_->rookIds, fieldId))
-        {
-            this->addPiece(new Rook(id, player, fieldId));
-            id++;
-        }
-
-        if (Utils::includes(config_->knightIds, fieldId))
-        {
-            this->addPiece(new Knight(id, player, fieldId));
-            id++;
-        }
-
-        if (Utils::includes(config_->bishopIds, fieldId))
-        {
-            this->addPiece(new Bishop(id, player, fieldId));
-            id++;
-        }
-
-        if (Utils::includes(config_->queenIds, fieldId))
-        {
-            this->addPiece(new Queen(id, player, fieldId));
-            id++;
-        }
-
-        if (Utils::includes(config_->kingIds, fieldId))
-        {
-            this->addPiece(new King(id, player, fieldId));
-            id++;
-        }
+        if (Utils::includes(config_->pawnIds, fieldId)) piece = new Pawn(id, player, fieldId);
+        if (Utils::includes(config_->rookIds, fieldId)) piece = new Rook(id, player, fieldId);
+        if (Utils::includes(config_->knightIds, fieldId)) piece = new Knight(id, player, fieldId);
+        if (Utils::includes(config_->bishopIds, fieldId)) piece = new Bishop(id, player, fieldId);
+        if (Utils::includes(config_->queenIds, fieldId)) piece = new Queen(id, player, fieldId);
+        if (Utils::includes(config_->kingIds, fieldId)) piece = new King(id, player, fieldId);
+        
+        this->addPiece(piece);
+        id++;
     }
 }
 
 void Game::printMove(unsigned int order)
 {
-    // TODO: edit / delete?
     std::vector<Move *> moves = this->getMoves();
     std::vector<Move *>::iterator result = std::find_if(std::begin(moves), std::end(moves), [order](Move *move)
         { return move->getOrder() == order; });
