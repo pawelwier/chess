@@ -222,7 +222,7 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
 
         std::vector<Field *> fields = game->getBoard();
 
-        MoveOptions *options = new MoveOptions;
+        MoveOptions *options = game->getMoveOptions();
 
         std::vector<unsigned int> moves;
         std::vector<unsigned int> takes;
@@ -238,8 +238,10 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
 
         if (game->getSelectedPiece() && (!p || !isPlayerPiece))
         {
-            bool takeOk = Utils::includes(game->getTakeOptions(), clickIndex);
-            bool moveOk = Utils::includes(game->getMoveOptions(), clickIndex);
+            MoveOptions *moveOptions = game->getMoveOptions();
+
+            bool takeOk = Utils::includes(moveOptions->getTakes(), clickIndex);
+            bool moveOk = Utils::includes(moveOptions->getMoves(), clickIndex);
 
             Piece *piece = game->getSelectedPiece();
 
@@ -295,7 +297,7 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
 
                 game->setSelectedPiece(nullptr);
 
-                game->clearOptions();
+                game->getMoveOptions()->clear();
 
                 game->nextPlayer();
 
@@ -312,7 +314,7 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
         }
         else if (isPlayerPiece)
         {
-            game->clearOptions();
+            game->getMoveOptions()->clear();
 
             p->getAvailableMoves(game->config(), options, fields, game->getPieces(), game->getMoves(), game->getCurrentPlayer());
 
@@ -323,8 +325,8 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
             {
                 for (unsigned int move : moves)
                 {
-                    if (!(p->getType() == PieceType::king && game->isFieldInThreat(move)))
-                        game->addMoveOption(move);
+                    if ((p->getType() == PieceType::king && game->isFieldInThreat(move)))
+                        game->getMoveOptions()->removeMove(move);
                 }
             }
 
@@ -332,8 +334,8 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
             {
                 for (unsigned int take : takes)
                 {
-                    if (!(p->getType() == PieceType::king && game->isFieldInThreat(take)))
-                        game->addTakeOption(take);
+                    if ((p->getType() == PieceType::king && game->isFieldInThreat(take)))
+                        game->getMoveOptions()->removeTake(take);
                 }
             }
             game->setSelectedPiece(p);

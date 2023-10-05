@@ -1,3 +1,6 @@
+#ifndef UI_ELEMENTS_H
+#define UI_ELEMENTS_H
+
 #include "Field.hpp"
 #include "Game.hpp"
 #include "InitialConfig.hpp"
@@ -61,3 +64,5 @@ struct UIElements
 
     void handleEvents(Game *game, sf::RenderWindow *window, sf::Event event);
 };
+
+#endif

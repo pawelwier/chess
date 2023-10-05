@@ -5,6 +5,7 @@
 #include "Field.hpp"
 #include "Player.hpp"
 #include "Move.hpp"
+#include "MoveOptions.hpp"
 
 #include <iostream>
 #include <iomanip>
@@ -22,8 +23,7 @@ private:
     std::vector<Move *> moves_;
     std::vector<Piece *> takes_;
     Piece *selectedPiece_ = nullptr;
-    std::vector<unsigned int> moveOptions_;
-    std::vector<unsigned int> takeOptions_;
+    MoveOptions *moveOptions_;
 
 public:
     Game(InitialConfig* config);
@@ -66,17 +66,11 @@ public:
 
     void printMove(unsigned int moveId);
 
-    void addMoveOption(unsigned int moveOption);
-
-    std::vector<unsigned int> getMoveOptions();
-
-    void addTakeOption(unsigned int takeOption);
+    MoveOptions *getMoveOptions();
 
     unsigned int getPlayerPoints(Player player);
 
-    void clearOptions();
-
-    std::vector<unsigned int> getTakeOptions();
+    bool hasMoveOptions();
 
     unsigned int getKingFieldId(Player player);
 

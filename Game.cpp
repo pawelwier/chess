@@ -23,6 +23,7 @@ Game::Game(InitialConfig* config) :
     config_(config)
 {   
     pieces_ = {};
+    moveOptions_ = new MoveOptions();
     unsigned int startLetter = config->startLetter;
     unsigned int size = config->size;
 
@@ -156,30 +157,14 @@ bool Game::fieldHasPiece(unsigned int fieldId)
     return hasPiece;
 }
 
-void Game::addMoveOption(unsigned int option)
-{
-    moveOptions_.push_back(option);
-}
-
-std::vector<unsigned int> Game::getMoveOptions()
+MoveOptions *Game::getMoveOptions()
 {
     return moveOptions_;
 }
 
-void Game::addTakeOption(unsigned int option)
+bool Game::hasMoveOptions()
 {
-    takeOptions_.push_back(option);
-}
-
-void Game::clearOptions()
-{
-    moveOptions_.clear();
-    takeOptions_.clear();
-}
-
-std::vector<unsigned int> Game::getTakeOptions()
-{
-    return takeOptions_;
+    return moveOptions_->getMoves().size() || moveOptions_->getTakes().size();
 }
 
 unsigned int Game::getPlayerPoints(Player player)
@@ -313,17 +298,17 @@ bool Game::isFieldInThreat(int fieldIndex)
         // TODO: a bit ugly
         if ((piece->getType() != PieceType::pawn 
             && Utils::includes(options->getMoves(), fieldIndex))
-            || Utils::includes(options->getTakes(), fieldIndex))
+                || Utils::includes(options->getTakes(), fieldIndex)
+            )
         {
             isInThreat = true;
             break;
         }
-        else
-        {
-            options->clear();
-        }
     }
 
+    options = nullptr;
+    delete options;
+    
     return isInThreat;
 }
 

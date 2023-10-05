@@ -1,5 +1,4 @@
 #include "Piece.hpp"
-#include "MoveOptions.hpp"
 #include "Field.hpp"
 #include "PieceType.hpp"
 

@@ -18,6 +18,8 @@ public:
     static bool isOutsideBoard(InitialConfig* config, unsigned int x, unsigned int y);
 
     static void addMoveOptions(std::vector<unsigned int> ids, std::vector<Piece *> pieces, MoveOptions *options, Player player, bool stopOnPiece = true);
+
+    static std::vector<unsigned int> removeFromOptions(std::vector<unsigned int> options, unsigned int option);
 };
 
 #endif

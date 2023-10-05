@@ -4,6 +4,7 @@
 #include "../InitialConfig.hpp"
 
 #include <vector>
+#include <algorithm>
 
 #define LOOP(x) for (int i = 0; i < x; i++)
 
@@ -22,7 +23,6 @@ bool MoveUtils::isOpponentPieceOnField(unsigned int index, std::vector<Piece *> 
 
 bool MoveUtils::isOutsideBoard(InitialConfig* config, unsigned int x, unsigned int y)
 {
-
     unsigned int size = config->size;
     unsigned int startNumber = config->startNumber;
     unsigned int startLetter = config->startLetter;
@@ -48,4 +48,14 @@ void MoveUtils::addMoveOptions(std::vector<unsigned int> ids, std::vector<Piece 
             }
         }
     }
+}
+
+std::vector<unsigned int> MoveUtils::removeFromOptions(std::vector<unsigned int> options, unsigned int option)
+{
+    std::vector<unsigned int> filteredOptions;
+    std::copy_if(options.begin(), options.end(), std::back_inserter(filteredOptions), [option](unsigned int i) {
+        return i != option;
+    });
+
+    return filteredOptions;
 }

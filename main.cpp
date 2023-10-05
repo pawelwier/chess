@@ -66,8 +66,12 @@ int main()
 
         ui.drawPieces(&window, config, game->getBoard(), game->getPieces());
 
-        ui.drawDots(&window, config, game->getMoveOptions(), game->getBoard());
-        ui.drawDots(&window, config, game->getTakeOptions(), game->getBoard(), true);
+        if (game->hasMoveOptions())
+        {
+            MoveOptions *moveOptions = game->getMoveOptions();
+            ui.drawDots(&window, config, moveOptions->getMoves(), game->getBoard());
+            ui.drawDots(&window, config, moveOptions->getTakes(), game->getBoard(), true);
+        }
 
         if (game->isCheck())
         {
