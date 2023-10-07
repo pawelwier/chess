@@ -12,5 +12,5 @@ public:
 
     static void addField();
 
-    static Field *findFieldByFieldId(std::vector<Field *> v, unsigned int fieldId);
+    static Field *findFieldByFieldId(std::vector<Field *> fields, unsigned int fieldId);
 };

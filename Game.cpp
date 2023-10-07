@@ -248,13 +248,13 @@ Player Game::getOpponent()
     return current == Player::black ? Player::white : Player::black;
 }
 
-bool Game::isFieldInThreat(int fieldIndex)
+bool Game::isFieldInThreat(int fieldIndex, std::vector<Piece *> pieces)
 {
     bool isInThreat = false;
     Player current = this->getCurrentPlayer();
     Player opponent = this->getOpponent();
 
-    MoveOptions *options = new MoveOptions; // TODO: passed as arg? needs to delete
+    MoveOptions *options = new MoveOptions;
 
     std::vector<Piece *> opponentPieces = getPiecesByPlayer(opponent);
 
@@ -264,7 +264,7 @@ bool Game::isFieldInThreat(int fieldIndex)
             this->config(), 
             options,
             this->getBoard(),
-            this->getPieces(),
+            pieces,
             this->getMoves(),
             opponent);
 
@@ -285,11 +285,11 @@ bool Game::isFieldInThreat(int fieldIndex)
     return isInThreat;
 }
 
-bool Game::isCheck()
+bool Game::isCheck(std::vector<Piece *> pieces)
 {
     Player current = this->getCurrentPlayer();
 
     unsigned int kingIndex = this->getKingFieldId(current);
 
-    return this->isFieldInThreat(kingIndex);
+    return this->isFieldInThreat(kingIndex, pieces);
 }

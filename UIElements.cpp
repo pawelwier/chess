@@ -325,7 +325,7 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
             {
                 for (unsigned int move : moves)
                 {
-                    if ((p->getType() == PieceType::king && game->isFieldInThreat(move)))
+                    if ((p->getType() == PieceType::king && game->isFieldInThreat(move, game->getPieces())))
                         game->getMoveOptions()->removeMove(move);
                 }
             }
@@ -334,7 +334,7 @@ void UIElements::handleEvents(Game *game, sf::RenderWindow *window, sf::Event ev
             {
                 for (unsigned int take : takes)
                 {
-                    if ((p->getType() == PieceType::king && game->isFieldInThreat(take)))
+                    if ((p->getType() == PieceType::king && game->isFieldInThreat(take, game->getPieces())))
                         game->getMoveOptions()->removeTake(take);
                 }
             }

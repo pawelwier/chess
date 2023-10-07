@@ -28,10 +28,10 @@ Player FieldUtils::initPiecePlayer(short unsigned id)
     return Utils::isWithinValues(id, whitePieces) ? white : black;
 }
 
-Field *FieldUtils::findFieldByFieldId(std::vector<Field *> v, unsigned int fieldId)
+Field *FieldUtils::findFieldByFieldId(std::vector<Field *> fields, unsigned int fieldId)
 {
-    std::vector<Field *>::iterator result = std::find_if(v.begin(), v.end(), [fieldId](Field *field)
+    std::vector<Field *>::iterator result = std::find_if(fields.begin(), fields.end(), [fieldId](Field *field)
                                                          { return field->getId() == fieldId; });
-    ptrdiff_t index = std::distance(v.begin(), result);
-    return v[index];
+    ptrdiff_t index = std::distance(fields.begin(), result);
+    return fields[index];
 }

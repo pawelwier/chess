@@ -4,27 +4,27 @@
 #include <algorithm>
 #include <numeric>
 
-unsigned int PieceUtils::findPieceIndex(std::vector<Piece *> v, unsigned int fieldId)
+unsigned int PieceUtils::findPieceIndex(std::vector<Piece *> pieces, unsigned int fieldId)
 {
-    std::vector<Piece *>::iterator result = std::find_if(v.begin(), v.end(), [fieldId](Piece *piece)
-                                                         { return piece->getFieldId() == fieldId; }); // TODO: read into
-    ptrdiff_t index = std::distance(v.begin(), result);
+    std::vector<Piece *>::iterator result = std::find_if(pieces.begin(), pieces.end(), [fieldId](Piece *piece)
+                                                         { return piece->getFieldId() == fieldId; });
+    ptrdiff_t index = std::distance(pieces.begin(), result);
     return index;
 }
 
-Piece *PieceUtils::findPieceByFieldId(std::vector<Piece *> v, unsigned int fieldId)
+Piece *PieceUtils::findPieceByFieldId(std::vector<Piece *> pieces, unsigned int fieldId)
 {
-    unsigned int index = PieceUtils::findPieceIndex(v, fieldId);
-    if (index == -1 || index == v.size()) // TODO: is that ok??
+    unsigned int index = PieceUtils::findPieceIndex(pieces, fieldId);
+    if (index == -1 || index == pieces.size())
     {
         return 0;
     }
-    return v[index];
+    return pieces[index];
 }
 
-bool PieceUtils::isPlayersPieceOnField(Player player, std::vector<Piece *> v, unsigned int fieldId)
+bool PieceUtils::isPlayersPieceOnField(Player player, std::vector<Piece *> pieces, unsigned int fieldId)
 {
-    Piece *piece = findPieceByFieldId(v, fieldId);
+    Piece *piece = findPieceByFieldId(pieces, fieldId);
     return piece->getPlayer() == player;
 }
 

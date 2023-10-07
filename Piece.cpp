@@ -1,6 +1,7 @@
 #include "Piece.hpp"
 #include "Field.hpp"
 #include "PieceType.hpp"
+#include "./utils/PieceUtils.hpp"
 
 #include <map>
 #include <vector>
@@ -35,7 +36,6 @@ std::string Piece::getName()
     return pieces[type_];
 }
 
-// TODO: merge with getName()
 wchar_t Piece::getIcon()
 {
     std::map<PieceType, std::array<wchar_t, 2>> pieces{
@@ -90,27 +90,9 @@ unsigned int Piece::getPoints()
     return points_;
 }
 
-unsigned int Piece::findPieceIndex(std::vector<Piece *> v, unsigned int fieldId)
+bool Piece::isPlayersPieceOnField(Player player, std::vector<Piece *> pieces, unsigned int fieldId)
 {
-    std::vector<Piece *>::iterator result = std::find_if(v.begin(), v.end(), [fieldId](Piece *piece)
-        { return piece->getFieldId() == fieldId; }); // TODO: read into
-    ptrdiff_t index = std::distance(v.begin(), result);
-    return index;
-}
-
-Piece *Piece::findPieceByFieldId(std::vector<Piece *> v, unsigned int fieldId)
-{
-    unsigned int index = findPieceIndex(v, fieldId);
-    if (index == -1 || index == v.size()) // TODO: is that ok??
-    {
-        return 0;
-    }
-    return v[index];
-}
-
-bool Piece::isPlayersPieceOnField(Player player, std::vector<Piece *> v, unsigned int fieldId)
-{
-    Piece *piece = findPieceByFieldId(v, fieldId);
+    Piece *piece = PieceUtils::findPieceByFieldId(pieces, fieldId);
     return piece->getPlayer() == player;
 }
 

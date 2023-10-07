@@ -73,7 +73,7 @@ int main()
             ui.drawDots(&window, config, moveOptions->getTakes(), game->getBoard(), true);
         }
 
-        if (game->isCheck())
+        if (game->isCheck(game->getPieces()))
         {
             unsigned int kingFieldId = game->getKingFieldId(game->getCurrentPlayer());
             Field *kingField = FieldUtils::findFieldByFieldId(game->getBoard(), kingFieldId);

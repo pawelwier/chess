@@ -51,17 +51,13 @@ public:
 
     void setFieldId(unsigned int fieldId);
 
-    unsigned int findPieceIndex(std::vector<Piece *> v, unsigned int fieldId);
-
     bool getTaken();
 
     void setTaken(bool isTaken);
 
     unsigned int getPoints();
 
-    Piece *findPieceByFieldId(std::vector<Piece *> v, unsigned int fieldId);
-
-    bool isPlayersPieceOnField(Player player, std::vector<Piece *> v, unsigned int fieldId);
+    bool isPlayersPieceOnField(Player player, std::vector<Piece *> pieces, unsigned int fieldId);
 
     std::string getPlayerColor(Player player);
 };

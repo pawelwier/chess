@@ -76,9 +76,9 @@ public:
 
     Player getOpponent();
 
-    bool isFieldInThreat(int fieldIndex);
+    bool isFieldInThreat(int fieldIndex, std::vector<Piece *> pieces);
 
-    bool isCheck();
+    bool isCheck(std::vector<Piece *> pieces);
 };
 
 #endif

@@ -10,11 +10,11 @@
 class PieceUtils
 {
 public:
-    static unsigned int findPieceIndex(std::vector<Piece *> v, unsigned int fieldId);
+    static unsigned int findPieceIndex(std::vector<Piece *> pieces, unsigned int fieldId);
 
-    static Piece *findPieceByFieldId(std::vector<Piece *> v, unsigned int fieldId);
+    static Piece *findPieceByFieldId(std::vector<Piece *> pieces, unsigned int fieldId);
 
-    static bool isPlayersPieceOnField(Player player, std::vector<Piece *> v, unsigned int fieldId);
+    static bool isPlayersPieceOnField(Player player, std::vector<Piece *> pieces, unsigned int fieldId);
 
     static bool isPlayerPiece(Piece *piece, Player player);
 
